@@ -31,6 +31,10 @@ export const structureAddUrl = () => `${aiStudioBaseUrl()}/scripts/structure/add
 export const buildUrl = () => `${aiStudioBaseUrl()}/build/`;
 export const buildProgressUrl = (id: string) => `${aiStudioBaseUrl()}/build/progress/${id}/`;
 
+// Studio Home payload — the canonical Open edX source for the orgs a user is
+// allowed to create courses in (replaces the Blend-ed `orgName` cookie).
+export const studioHomeUrl = () => `${getConfig().STUDIO_BASE_URL}/api/contentstore/v1/home`;
+
 export interface SendChatParams {
   message: string;
   courseCreationId?: string;
@@ -54,6 +58,25 @@ export async function fetchCourseCreations(organisationId?: string): Promise<Cou
     : chatUrl();
   const { data } = await getAuthenticatedHttpClient().get(url);
   return camelCaseObject(data) as CourseCreationSummary[];
+}
+
+export interface AllowedOrgs {
+  /** Orgs the user may create courses in. */
+  allowedOrganizations: string[];
+  /** When true, the instance lets the user create a course under any org. */
+  allowToCreateNewOrg: boolean;
+}
+
+export async function fetchAllowedOrgs(): Promise<AllowedOrgs> {
+  const { data } = await getAuthenticatedHttpClient().get(studioHomeUrl());
+  const home = camelCaseObject(data) as {
+    allowedOrganizations?: string[];
+    allowToCreateNewOrg?: boolean;
+  };
+  return {
+    allowedOrganizations: home.allowedOrganizations || [],
+    allowToCreateNewOrg: !!home.allowToCreateNewOrg,
+  };
 }
 
 export async function fetchMessages(id: string): Promise<CourseCreationMessage[]> {

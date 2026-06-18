@@ -47,8 +47,12 @@ What changed vs. the authoring source
 **************************************
 
 * ``src/ai-studio/`` copied verbatim from ``frontend-app-authoring``.
-* Two small helpers ported into ``src/generic/``: ``aiErrorMessage`` and
-  ``data/orgFromCookie``.
+* One helper ported into ``src/generic/``: ``aiErrorMessage``.
+* The Blend-ed ``orgName`` cookie (a tenant marker, not an Open edX concept) was
+  removed. At build time the user picks an org from a dropdown populated by the
+  Studio Home API (``/api/contentstore/v1/home`` → ``allowed_organizations``);
+  chat / history no longer scope by org (single-tenant: list all the user's
+  sessions).
 * ``src/index.jsx`` is a minimal shell (``AppProvider`` + React Query +
   ``RouterProvider``) — the Blend-ed ``AppWrapper`` / ``AiChatModal`` /
   ``RequirePermission`` / ``StaffShellGuard`` / ``Header`` were dropped.

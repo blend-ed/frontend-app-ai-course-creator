@@ -2,7 +2,7 @@ import React, {
   useEffect, useMemo, useRef, useState,
 } from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Badge } from '@openedx/paragon';
+import { Button, Badge, Form } from '@openedx/paragon';
 import { RiFileList3Line, RiInformationLine } from '@remixicon/react';
 import messages from '../../messages';
 import {
@@ -12,10 +12,10 @@ import {
   useGenerateUnit,
   useStartBuild,
   useUpdateUnitPlan,
+  useAllowedOrgs,
 } from '../../data/apiHooks';
 import ScriptCard from './ScriptCard';
 import AddComponentMenu from '../outline/AddComponentMenu';
-import getOrgFromCookie from '../../../generic/data/orgFromCookie';
 import { randomCourseNumber, randomCourseRun } from '../../data/randomRun';
 import '../outline/OutlinePanel.scss';
 import './ScriptsPanel.scss';
@@ -36,9 +36,17 @@ const ScriptsPanel = ({ courseCreationId }) => {
   const genUnit = useGenerateUnit();
   const updatePlan = useUpdateUnitPlan();
   const startBuild = useStartBuild();
+  const { data: orgInfo } = useAllowedOrgs();
 
+  const allowedOrgs = orgInfo?.allowedOrganizations || [];
   const [currentUnitId, setCurrentUnitId] = useState(null);
+  const [org, setOrg] = useState('');
   const startedRef = useRef(false);
+
+  // Default to the user's first allowed org once Studio Home resolves.
+  useEffect(() => {
+    if (!org && allowedOrgs.length) { setOrg(allowedOrgs[0]); }
+  }, [allowedOrgs, org]);
 
   const componentsByUnit = useMemo(
     () => Object.fromEntries(componentsData.map((u) => [u.unitId, u.components || []])),
@@ -100,9 +108,10 @@ const ScriptsPanel = ({ courseCreationId }) => {
   };
 
   const onCreateCourse = () => {
+    if (!org) { return; }
     startBuild.mutate({
       courseCreationId,
-      org: getOrgFromCookie() || 'default',
+      org,
       number: randomCourseNumber(),
       run: randomCourseRun(),
     });
@@ -201,10 +210,30 @@ const ScriptsPanel = ({ courseCreationId }) => {
         </div>
       </div>
       <div className="ai-studio-scripts__footer">
+        <Form.Group className="ai-studio-scripts__org">
+          <Form.Label className="ai-studio-scripts__org-label">
+            {intl.formatMessage(messages.buildOrgLabel)}
+          </Form.Label>
+          {allowedOrgs.length > 0 ? (
+            <Form.Control
+              as="select"
+              value={org}
+              onChange={(e) => setOrg(e.target.value)}
+            >
+              {allowedOrgs.map((o) => <option key={o} value={o}>{o}</option>)}
+            </Form.Control>
+          ) : (
+            <Form.Control
+              value={org}
+              onChange={(e) => setOrg(e.target.value)}
+              placeholder={intl.formatMessage(messages.buildOrgPlaceholder)}
+            />
+          )}
+        </Form.Group>
         <Button
           variant="tertiary"
           onClick={onCreateCourse}
-          disabled={!allReady || startBuild.isPending}
+          disabled={!allReady || !org || startBuild.isPending}
           className="ai-studio-scripts__cta"
         >
           <RiFileList3Line size={18} />

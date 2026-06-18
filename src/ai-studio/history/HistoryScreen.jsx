@@ -13,7 +13,6 @@ import { format as formatDate, parseISO, isToday } from 'date-fns';
 import messages from '../messages';
 import { useCourseCreations } from '../data/apiHooks';
 import { STAGES } from '../data/constants';
-import getOrgFromCookie from '../../generic/data/orgFromCookie';
 import HoverCard from './HoverCard';
 import './HistoryScreen.scss';
 
@@ -71,8 +70,7 @@ const safeFormat = (iso, pattern) => {
 const HistoryScreen = () => {
   const intl = useIntl();
   const navigate = useNavigate();
-  const organisationId = getOrgFromCookie() || undefined;
-  const { data: items = [], isLoading } = useCourseCreations(organisationId);
+  const { data: items = [], isLoading } = useCourseCreations();
   const [query, setQuery] = useState('');
 
   const { todayItems, olderItems } = useMemo(() => {

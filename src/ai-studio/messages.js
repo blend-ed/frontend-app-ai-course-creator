@@ -94,6 +94,14 @@ const messages = defineMessages({
     id: 'course-authoring.ai-studio.scripts.cta',
     defaultMessage: 'Create Course',
   },
+  buildOrgLabel: {
+    id: 'course-authoring.ai-studio.scripts.buildOrgLabel',
+    defaultMessage: 'Organization',
+  },
+  buildOrgPlaceholder: {
+    id: 'course-authoring.ai-studio.scripts.buildOrgPlaceholder',
+    defaultMessage: 'e.g. edX',
+  },
   // Building
   buildingTitle: {
     id: 'course-authoring.ai-studio.building.title',

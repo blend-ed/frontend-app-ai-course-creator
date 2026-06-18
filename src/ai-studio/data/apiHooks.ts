@@ -7,6 +7,13 @@ export const useCourseCreations = (organisationId?: string) => useQuery({
   queryFn: () => api.fetchCourseCreations(organisationId),
 });
 
+/** Orgs the signed-in user may build a course under (from Studio Home). */
+export const useAllowedOrgs = () => useQuery({
+  queryKey: aiStudioKeys.allowedOrgs(),
+  queryFn: () => api.fetchAllowedOrgs(),
+  staleTime: Infinity,
+});
+
 export const useMessages = (id?: string) => useQuery({
   queryKey: aiStudioKeys.messages(id || ''),
   queryFn: () => api.fetchMessages(id as string),

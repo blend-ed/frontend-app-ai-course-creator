@@ -4,7 +4,6 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import { useCourseMetadata, useMessages, useSendChat } from './data/apiHooks';
 import { STAGES } from './data/constants';
-import getOrgFromCookie from '../generic/data/orgFromCookie';
 import LandingScreen from './landing/LandingScreen';
 import ChatColumn from './chat/ChatColumn';
 import RightPanel from './right-panel/RightPanel';
@@ -80,7 +79,7 @@ const CourseCreatorFlow = ({ courseCreationId }) => {
     const onLandingSubmit = ({ message, files }) => {
       if (sendChat.error) { sendChat.reset(); }
       sendChat.mutate(
-        { message, files, organisationId: getOrgFromCookie() || undefined },
+        { message, files },
         {
           onSuccess: (res) => navigate(`/ai-studio/${res.courseCreationId}`, { replace: true }),
         },

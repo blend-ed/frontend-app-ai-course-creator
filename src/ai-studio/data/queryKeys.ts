@@ -1,5 +1,6 @@
 export const aiStudioKeys = {
   all: ['ai-studio'] as const,
+  allowedOrgs: () => [...aiStudioKeys.all, 'allowed-orgs'] as const,
   creations: (organisationId?: string) => [...aiStudioKeys.all, 'creations', organisationId || ''] as const,
   messages: (id: string) => [...aiStudioKeys.all, 'messages', id] as const,
   metadata: (id: string) => [...aiStudioKeys.all, 'metadata', id] as const,
