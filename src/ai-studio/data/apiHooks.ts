@@ -194,3 +194,73 @@ export const useStartBuild = () => {
     },
   });
 };
+
+/** AI-refine a single component's script from a natural-language instruction. */
+export const useRefineScript = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (p: { componentId: string; instruction: string; courseCreationId: string }) => (
+      api.refineScript(p.componentId, p.instruction)
+    ),
+    onSuccess: (_d, vars) => {
+      qc.invalidateQueries({ queryKey: aiStudioKeys.components(vars.courseCreationId) });
+    },
+  });
+};
+
+/** AI-refine the course outline; refreshes both the structure and the plan. */
+export const useRefineStructure = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (p: { courseCreationId: string; instruction: string }) => (
+      api.refineStructure(p.courseCreationId, p.instruction)
+    ),
+    onSuccess: (_d, vars) => {
+      qc.invalidateQueries({ queryKey: aiStudioKeys.structure(vars.courseCreationId) });
+      qc.invalidateQueries({ queryKey: aiStudioKeys.componentPlan(vars.courseCreationId) });
+    },
+  });
+};
+
+// --- Prompt customization (staff admin) ---
+export const usePromptOverrides = () => useQuery({
+  queryKey: aiStudioKeys.promptOverrides(),
+  queryFn: () => api.fetchPromptOverrides(),
+});
+
+export const useSavePromptOverride = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.savePromptOverride,
+    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptOverrides() }),
+  });
+};
+
+export const useDeletePromptOverride = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (pk: string) => api.deletePromptOverride(pk),
+    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptOverrides() }),
+  });
+};
+
+export const usePromptAddenda = () => useQuery({
+  queryKey: aiStudioKeys.promptAddenda(),
+  queryFn: () => api.fetchPromptAddenda(),
+});
+
+export const useSavePromptAddendum = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.savePromptAddendum,
+    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptAddenda() }),
+  });
+};
+
+export const useDeletePromptAddendum = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (pk: string) => api.deletePromptAddendum(pk),
+    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptAddenda() }),
+  });
+};

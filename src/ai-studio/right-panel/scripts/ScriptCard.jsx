@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Form, IconButton } from '@openedx/paragon';
+import {
+  Button, Form, IconButton, Spinner,
+} from '@openedx/paragon';
 import {
   RiCheckboxCircleFill,
   RiLoader4Line,
@@ -8,10 +10,11 @@ import {
   RiCloseLine,
   RiEditLine,
   RiCheckLine,
+  RiSparkling2Line,
 } from '@remixicon/react';
 import messages from '../../messages';
 import { componentTypeMeta } from '../../data/constants';
-import { useUpdateComponentScript } from '../../data/apiHooks';
+import { useUpdateComponentScript, useRefineScript } from '../../data/apiHooks';
 import './ScriptCard.scss';
 
 const ScriptCard = ({
@@ -30,8 +33,13 @@ const ScriptCard = ({
   const [draft, setDraft] = useState(script || '');
   const update = useUpdateComponentScript();
 
+  const refine = useRefineScript();
+  const [refining, setRefining] = useState(false);
+  const [instruction, setInstruction] = useState('');
+
   const startEdit = () => {
     setDraft(script || '');
+    setRefining(false);
     setEditing(true);
   };
 
@@ -40,6 +48,20 @@ const ScriptCard = ({
     update.mutate(
       { componentId, script: draft, courseCreationId },
       { onSuccess: () => setEditing(false) },
+    );
+  };
+
+  const startRefine = () => {
+    setEditing(false);
+    setInstruction('');
+    setRefining((v) => !v);
+  };
+
+  const submitRefine = () => {
+    if (!componentId || !instruction.trim()) { return; }
+    refine.mutate(
+      { componentId, instruction: instruction.trim(), courseCreationId },
+      { onSuccess: () => { setRefining(false); setInstruction(''); } },
     );
   };
 
@@ -70,6 +92,16 @@ const ScriptCard = ({
                   size="sm"
                   variant="ghost-secondary"
                   onClick={startEdit}
+                />
+              )}
+              {!editing && componentId && (
+                <IconButton
+                  iconAs={RiSparkling2Line}
+                  alt={intl.formatMessage(messages.actionRefine)}
+                  size="sm"
+                  variant="ghost-secondary"
+                  onClick={startRefine}
+                  isActive={refining}
                 />
               )}
               {editing && (
@@ -106,6 +138,39 @@ const ScriptCard = ({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
           />
+        )}
+        {refining && (
+          <div className="ai-studio-script-card__refine">
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
+              placeholder={intl.formatMessage(messages.refineInstructionPlaceholder)}
+              disabled={refine.isPending}
+            />
+            <div className="ai-studio-script-card__refine-actions">
+              <Button
+                size="sm"
+                variant="tertiary"
+                onClick={() => { setRefining(false); setInstruction(''); }}
+                disabled={refine.isPending}
+              >
+                {intl.formatMessage(messages.actionCancel)}
+              </Button>
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={submitRefine}
+                disabled={refine.isPending || !instruction.trim()}
+                iconBefore={refine.isPending ? undefined : RiSparkling2Line}
+              >
+                {refine.isPending
+                  ? <Spinner animation="border" size="sm" screenReaderText={intl.formatMessage(messages.refineSubmit)} />
+                  : intl.formatMessage(messages.refineSubmit)}
+              </Button>
+            </div>
+          </div>
         )}
         {!editing && status === 'done' && script && (
           <p className="ai-studio-script-card__text">

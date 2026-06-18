@@ -358,3 +358,23 @@
     border-radius: 4px;
   }
 }
+
+.ai-studio-outline__refine {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding: 0 1rem .5rem;
+  width: 100%;
+}
+
+.ai-studio-outline__refine-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.ai-studio-outline__refine-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+}

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
+import { Link } from 'react-router-dom';
 import {
   Alert, Button, Form, IconButton,
 } from '@openedx/paragon';
@@ -126,6 +127,14 @@ const LandingScreen = ({
               onClick={onHistoryClick}
             >
               {intl.formatMessage(messages.creationHistory)}
+            </Button>
+            <Button
+              as={Link}
+              to="/ai-studio/prompts"
+              variant="ghost-secondary"
+              size="sm"
+            >
+              {intl.formatMessage(messages.promptsTitle)}
             </Button>
           </div>
         </div>

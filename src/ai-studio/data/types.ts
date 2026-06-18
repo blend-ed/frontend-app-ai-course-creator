@@ -94,3 +94,49 @@ export interface BuildProgress {
   courseKey?: string;
   errorMessage?: string;
 }
+
+// --- Prompt customization (staff admin) ---
+// Keys must match PromptOverride.Key on the backend (models.py).
+export const PROMPT_KEYS = [
+  'system',
+  'component_plan',
+  'script_generation',
+  'script_refinement',
+  'structure_refinement',
+  'olx_generation',
+] as const;
+export type PromptKey = typeof PROMPT_KEYS[number];
+
+export interface PromptOverride {
+  id: string;
+  key: PromptKey;
+  organisationId: string;
+  body: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PromptOverrideInput {
+  id?: string;
+  key: PromptKey;
+  organisationId: string;
+  body: string;
+  isActive: boolean;
+}
+
+export interface PromptAddendum {
+  id: string;
+  organisationId: string;
+  body: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PromptAddendumInput {
+  id?: string;
+  organisationId: string;
+  body: string;
+  isActive: boolean;
+}

@@ -145,3 +145,16 @@
   }
 }
 
+.ai-studio-script-card__refine {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-top: .25rem;
+}
+
+.ai-studio-script-card__refine-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+}
+

@@ -21,6 +21,7 @@ import {
 
 import AiStudioPage from './ai-studio';
 import AiStudioHistoryPage from './ai-studio/history/AiStudioHistoryPage';
+import PromptsAdminPage from './ai-studio/prompts/PromptsAdminPage';
 import messages from './i18n';
 import './index.scss';
 
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/ai-studio" replace />} />
         <Route path="/ai-studio" element={<AiStudioPage />} />
         <Route path="/ai-studio/history" element={<AiStudioHistoryPage />} />
+        <Route path="/ai-studio/prompts" element={<PromptsAdminPage />} />
         <Route path="/ai-studio/:courseCreationId" element={<AiStudioPage />} />
       </Route>,
     ),

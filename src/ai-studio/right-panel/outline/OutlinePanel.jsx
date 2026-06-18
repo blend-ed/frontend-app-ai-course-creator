@@ -1,12 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Skeleton } from '@openedx/paragon';
-import { RiFileList3Line } from '@remixicon/react';
+import {
+  Button, Form, Skeleton, Spinner,
+} from '@openedx/paragon';
+import { RiFileList3Line, RiSparkling2Line } from '@remixicon/react';
 import messages from '../../messages';
 import {
   useStructure,
   useComponentPlan,
   useGenerateComponentPlan,
+  useRefineStructure,
 } from '../../data/apiHooks';
 import StructureTree from './StructureTree';
 import './OutlinePanel.scss';
@@ -20,6 +23,17 @@ const OutlinePanel = ({ courseCreationId, onScriptsReady }) => {
   const { data: structure = [], isLoading: sLoading } = useStructure(courseCreationId);
   const { data: planResp, isLoading: pLoading } = useComponentPlan(courseCreationId);
   const genPlan = useGenerateComponentPlan();
+  const refine = useRefineStructure();
+  const [refineOpen, setRefineOpen] = useState(false);
+  const [instruction, setInstruction] = useState('');
+
+  const submitRefine = () => {
+    if (!instruction.trim()) { return; }
+    refine.mutate(
+      { courseCreationId, instruction: instruction.trim() },
+      { onSuccess: () => { setRefineOpen(false); setInstruction(''); } },
+    );
+  };
 
   const planEntries = planResp?.plan || [];
   const planByUnit = useMemo(() => buildPlanMap(planEntries), [planEntries]);
@@ -66,6 +80,52 @@ const OutlinePanel = ({ courseCreationId, onScriptsReady }) => {
             courseCreationId={courseCreationId}
             planByUnit={planByUnit}
           />
+        )}
+      </div>
+      <div className="ai-studio-outline__refine">
+        {!refineOpen ? (
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => setRefineOpen(true)}
+            disabled={busy || structure.length === 0}
+            className="ai-studio-outline__refine-toggle"
+          >
+            <RiSparkling2Line size={16} />
+            {intl.formatMessage(messages.refineOutlineCta)}
+          </Button>
+        ) : (
+          <div className="ai-studio-outline__refine-box">
+            <Form.Control
+              as="textarea"
+              rows={2}
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
+              placeholder={intl.formatMessage(messages.refineOutlinePlaceholder)}
+              disabled={refine.isPending}
+            />
+            <div className="ai-studio-outline__refine-actions">
+              <Button
+                size="sm"
+                variant="tertiary"
+                onClick={() => { setRefineOpen(false); setInstruction(''); }}
+                disabled={refine.isPending}
+              >
+                {intl.formatMessage(messages.actionCancel)}
+              </Button>
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={submitRefine}
+                disabled={refine.isPending || !instruction.trim()}
+                iconBefore={refine.isPending ? undefined : RiSparkling2Line}
+              >
+                {refine.isPending
+                  ? <Spinner animation="border" size="sm" screenReaderText={intl.formatMessage(messages.refineSubmit)} />
+                  : intl.formatMessage(messages.refineSubmit)}
+              </Button>
+            </div>
+          </div>
         )}
       </div>
       <div className="ai-studio-outline__footer">

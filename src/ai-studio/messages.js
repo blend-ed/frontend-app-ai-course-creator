@@ -430,6 +430,108 @@ const messages = defineMessages({
     id: 'course-authoring.ai-studio.outline.removeComponent',
     defaultMessage: 'Remove {label}',
   },
+  // AI refine (scripts + outline)
+  actionRefine: {
+    id: 'course-authoring.ai-studio.action.refine',
+    defaultMessage: 'Refine with AI',
+  },
+  refineInstructionPlaceholder: {
+    id: 'course-authoring.ai-studio.refine.script.placeholder',
+    defaultMessage: 'Describe how to improve this script…',
+  },
+  refineSubmit: {
+    id: 'course-authoring.ai-studio.refine.submit',
+    defaultMessage: 'Refine',
+  },
+  refineOutlineCta: {
+    id: 'course-authoring.ai-studio.refine.outline.cta',
+    defaultMessage: 'Refine outline with AI',
+  },
+  refineOutlinePlaceholder: {
+    id: 'course-authoring.ai-studio.refine.outline.placeholder',
+    defaultMessage: 'Describe how to change the outline (e.g. "add a section on testing")…',
+  },
+  // Prompts admin
+  promptsTitle: {
+    id: 'course-authoring.ai-studio.prompts.title',
+    defaultMessage: 'Prompt customization',
+  },
+  promptsSubtitle: {
+    id: 'course-authoring.ai-studio.prompts.subtitle',
+    defaultMessage: 'Override the built-in AI prompts or append company business-logic instructions. Staff only.',
+  },
+  promptsBackToStudio: {
+    id: 'course-authoring.ai-studio.prompts.back',
+    defaultMessage: 'Back to AI Studio',
+  },
+  promptsForbidden: {
+    id: 'course-authoring.ai-studio.prompts.forbidden',
+    defaultMessage: 'You need staff access to manage prompts.',
+  },
+  promptsOverridesHeading: {
+    id: 'course-authoring.ai-studio.prompts.overrides.heading',
+    defaultMessage: 'Prompt overrides',
+  },
+  promptsOverridesHelp: {
+    id: 'course-authoring.ai-studio.prompts.overrides.help',
+    defaultMessage: 'Replace a named prompt for one org or globally. Use $placeholders for dynamic values; the built-in default is used when no active override matches.',
+  },
+  promptsAddendaHeading: {
+    id: 'course-authoring.ai-studio.prompts.addenda.heading',
+    defaultMessage: 'Business-logic instructions',
+  },
+  promptsAddendaHelp: {
+    id: 'course-authoring.ai-studio.prompts.addenda.help',
+    defaultMessage: 'Extra instructions appended to the chat and generation prompts. A global entry applies to every org; a per-org entry is appended after it.',
+  },
+  promptsFieldKey: {
+    id: 'course-authoring.ai-studio.prompts.field.key',
+    defaultMessage: 'Prompt',
+  },
+  promptsFieldOrg: {
+    id: 'course-authoring.ai-studio.prompts.field.org',
+    defaultMessage: 'Organization (blank = global)',
+  },
+  promptsFieldBody: {
+    id: 'course-authoring.ai-studio.prompts.field.body',
+    defaultMessage: 'Body',
+  },
+  promptsFieldActive: {
+    id: 'course-authoring.ai-studio.prompts.field.active',
+    defaultMessage: 'Active',
+  },
+  promptsScopeGlobal: {
+    id: 'course-authoring.ai-studio.prompts.scope.global',
+    defaultMessage: 'Global',
+  },
+  promptsCreate: {
+    id: 'course-authoring.ai-studio.prompts.create',
+    defaultMessage: 'Add',
+  },
+  promptsUpdate: {
+    id: 'course-authoring.ai-studio.prompts.update',
+    defaultMessage: 'Save changes',
+  },
+  promptsEmpty: {
+    id: 'course-authoring.ai-studio.prompts.empty',
+    defaultMessage: 'None yet.',
+  },
+  promptsInactiveBadge: {
+    id: 'course-authoring.ai-studio.prompts.inactive',
+    defaultMessage: 'Inactive',
+  },
+  promptsDeleteTitle: {
+    id: 'course-authoring.ai-studio.prompts.delete.title',
+    defaultMessage: 'Delete this entry?',
+  },
+  promptsDeleteBody: {
+    id: 'course-authoring.ai-studio.prompts.delete.body',
+    defaultMessage: 'This removes the customization and the built-in default prompt is used again. This cannot be undone.',
+  },
+  actionDelete: {
+    id: 'course-authoring.ai-studio.action.delete',
+    defaultMessage: 'Delete',
+  },
 });
 
 export default messages;

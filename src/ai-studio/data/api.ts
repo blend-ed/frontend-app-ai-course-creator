@@ -8,6 +8,10 @@ import type {
   ComponentPlanEntry,
   UnitComponents,
   BuildProgress,
+  PromptOverride,
+  PromptOverrideInput,
+  PromptAddendum,
+  PromptAddendumInput,
 } from './types';
 
 export const aiStudioBaseUrl = () => `${getConfig().STUDIO_BASE_URL}/ai_course_creator`;
@@ -208,4 +212,74 @@ export async function startBuild(params: StartBuildParams) {
 export async function fetchBuildProgress(id: string): Promise<BuildProgress> {
   const { data } = await getAuthenticatedHttpClient().get(buildProgressUrl(id));
   return camelCaseObject(data) as BuildProgress;
+}
+
+// --- AI refine actions (regenerate a script / restructure the outline from a
+// natural-language instruction) ---
+export const refineScriptUrl = () => `${aiStudioBaseUrl()}/scripts/refine/`;
+export const refineStructureUrl = () => `${aiStudioBaseUrl()}/scripts/refine-structure/`;
+
+export async function refineScript(componentId: string, instruction: string) {
+  const { data } = await getAuthenticatedHttpClient().post(refineScriptUrl(), {
+    component_id: componentId,
+    instruction,
+  });
+  return camelCaseObject(data);
+}
+
+export async function refineStructure(courseCreationId: string, instruction: string) {
+  const { data } = await getAuthenticatedHttpClient().post(refineStructureUrl(), {
+    course_creation_id: courseCreationId,
+    instruction,
+  });
+  return camelCaseObject(data);
+}
+
+// --- Prompt customization (staff-only admin) ---
+export const promptOverridesUrl = () => `${aiStudioBaseUrl()}/prompts/overrides/`;
+export const promptOverrideUrl = (pk: string) => `${aiStudioBaseUrl()}/prompts/overrides/${pk}/`;
+export const promptAddendaUrl = () => `${aiStudioBaseUrl()}/prompts/addenda/`;
+export const promptAddendumUrl = (pk: string) => `${aiStudioBaseUrl()}/prompts/addenda/${pk}/`;
+
+export async function fetchPromptOverrides(): Promise<PromptOverride[]> {
+  const { data } = await getAuthenticatedHttpClient().get(promptOverridesUrl());
+  return camelCaseObject(data) as PromptOverride[];
+}
+
+export async function savePromptOverride(p: PromptOverrideInput): Promise<PromptOverride> {
+  const body = {
+    key: p.key,
+    organisation_id: p.organisationId || '',
+    body: p.body,
+    is_active: p.isActive,
+  };
+  const { data } = p.id
+    ? await getAuthenticatedHttpClient().put(promptOverrideUrl(p.id), body)
+    : await getAuthenticatedHttpClient().post(promptOverridesUrl(), body);
+  return camelCaseObject(data) as PromptOverride;
+}
+
+export async function deletePromptOverride(pk: string): Promise<void> {
+  await getAuthenticatedHttpClient().delete(promptOverrideUrl(pk));
+}
+
+export async function fetchPromptAddenda(): Promise<PromptAddendum[]> {
+  const { data } = await getAuthenticatedHttpClient().get(promptAddendaUrl());
+  return camelCaseObject(data) as PromptAddendum[];
+}
+
+export async function savePromptAddendum(p: PromptAddendumInput): Promise<PromptAddendum> {
+  const body = {
+    organisation_id: p.organisationId || '',
+    body: p.body,
+    is_active: p.isActive,
+  };
+  const { data } = p.id
+    ? await getAuthenticatedHttpClient().put(promptAddendumUrl(p.id), body)
+    : await getAuthenticatedHttpClient().post(promptAddendaUrl(), body);
+  return camelCaseObject(data) as PromptAddendum;
+}
+
+export async function deletePromptAddendum(pk: string): Promise<void> {
+  await getAuthenticatedHttpClient().delete(promptAddendumUrl(pk));
 }

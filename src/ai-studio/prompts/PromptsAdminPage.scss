@@ -1,0 +1,66 @@
+.ai-studio-prompts {
+  max-width: 920px;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    margin-bottom: 1rem;
+    font-size: .875rem;
+  }
+
+  &__title {
+    margin-bottom: .25rem;
+  }
+
+  &__subtitle {
+    margin-bottom: 1.5rem;
+  }
+
+  &__form {
+    margin-bottom: 1.5rem;
+  }
+
+  &__form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    margin-top: .75rem;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  &__row {
+    border: 1px solid var(--pgn-color-light-400, #e9e6e4);
+    border-radius: .375rem;
+    padding: .75rem;
+  }
+
+  &__row-head {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  &__row-actions {
+    margin-left: auto;
+    display: inline-flex;
+    gap: .25rem;
+  }
+
+  &__row-body {
+    margin: .5rem 0 0;
+    padding: .5rem;
+    background: var(--pgn-color-light-200, #f5f3f2);
+    border-radius: .25rem;
+    font-size: .8125rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 12rem;
+    overflow: auto;
+  }
+}
