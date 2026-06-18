@@ -1,0 +1,50 @@
+.ai-studio-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  padding: var(--pgn-spacing-spacer-4) var(--pgn-spacing-spacer-3);
+  gap: var(--pgn-spacing-spacer-3);
+
+  &__log {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+
+    // Hide scrollbar — scroll still works via wheel / trackpad / keyboard.
+    scrollbar-width: none;          // Firefox
+    -ms-overflow-style: none;       // IE / old Edge
+
+    &::-webkit-scrollbar {          // Chromium / Safari
+      width: 0;
+      height: 0;
+      display: none;
+    }
+  }
+
+  &__log-inner {
+    width: 100%;
+    max-width: 622px;
+
+    & > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__error {
+    margin-top: var(--pgn-spacing-spacer-3);
+    margin-bottom: 0;
+  }
+
+  &__dock {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pgn-spacing-spacer-2);
+    width: 100%;
+    max-width: 622px;
+    margin: 0 auto;
+  }
+}

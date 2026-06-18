@@ -1,0 +1,427 @@
+import { defineMessages } from '@edx/frontend-platform/i18n';
+
+const messages = defineMessages({
+  pageTitle: {
+    id: 'course-authoring.ai-studio.page.title',
+    defaultMessage: 'AI Studio | {siteName}',
+  },
+  // Landing
+  landingHeading: {
+    id: 'course-authoring.ai-studio.landing.heading',
+    defaultMessage: 'Create Engaging Courses<br></br>Using AI.',
+  },
+  landingSubtitle: {
+    id: 'course-authoring.ai-studio.landing.subtitle',
+    defaultMessage: 'Unlock the potential of AI to design interactive learning experiences for everyone.',
+  },
+  landingPromptPlaceholder: {
+    id: 'course-authoring.ai-studio.landing.placeholder',
+    defaultMessage: 'What should the course be about?…',
+  },
+  uploadLabel: {
+    id: 'course-authoring.ai-studio.upload',
+    defaultMessage: 'Upload',
+  },
+  sendAriaLabel: {
+    id: 'course-authoring.ai-studio.send',
+    defaultMessage: 'Send',
+  },
+  // Chat
+  chatPlaceholder: {
+    id: 'course-authoring.ai-studio.chat.placeholder',
+    defaultMessage: 'Ask anything…',
+  },
+  typingIndicator: {
+    id: 'course-authoring.ai-studio.chat.thinking',
+    defaultMessage: 'AI is thinking…',
+  },
+  chatErrorFallback: {
+    id: 'course-authoring.ai-studio.chat.error.fallback',
+    defaultMessage: 'Could not send message. Please try again.',
+  },
+  selectAllThatApply: {
+    id: 'course-authoring.ai-studio.options.multi',
+    defaultMessage: 'Select all that apply',
+  },
+  submitOptions: {
+    id: 'course-authoring.ai-studio.options.submit',
+    defaultMessage: 'Submit',
+  },
+  // Course Brief
+  courseBriefTitle: {
+    id: 'course-authoring.ai-studio.brief.title',
+    defaultMessage: 'Course Brief',
+  },
+  createOutlineCta: {
+    id: 'course-authoring.ai-studio.brief.cta',
+    defaultMessage: 'Create Outline',
+  },
+  // Outline
+  courseOutlineTitle: {
+    id: 'course-authoring.ai-studio.outline.title',
+    defaultMessage: 'Course Outline',
+  },
+  generateScriptCta: {
+    id: 'course-authoring.ai-studio.outline.cta',
+    defaultMessage: 'Generate Script',
+  },
+  addSection: {
+    id: 'course-authoring.ai-studio.outline.add.section',
+    defaultMessage: 'Add Section',
+  },
+  addSubsection: {
+    id: 'course-authoring.ai-studio.outline.add.subsection',
+    defaultMessage: 'Add Subsection',
+  },
+  addUnit: {
+    id: 'course-authoring.ai-studio.outline.add.unit',
+    defaultMessage: 'Add Unit',
+  },
+  // Scripts
+  scriptGenerationTitle: {
+    id: 'course-authoring.ai-studio.scripts.title',
+    defaultMessage: 'Script Generation',
+  },
+  scriptCounter: {
+    id: 'course-authoring.ai-studio.scripts.counter',
+    defaultMessage: 'Generating Scripts for Components ({current} of {total})',
+  },
+  scriptInQueue: {
+    id: 'course-authoring.ai-studio.scripts.queue',
+    defaultMessage: 'In queue',
+  },
+  createCourseCta: {
+    id: 'course-authoring.ai-studio.scripts.cta',
+    defaultMessage: 'Create Course',
+  },
+  // Building
+  buildingTitle: {
+    id: 'course-authoring.ai-studio.building.title',
+    defaultMessage: 'Your Course is being created',
+  },
+  buildingSubtitle: {
+    id: 'course-authoring.ai-studio.building.subtitle',
+    defaultMessage: 'The process will take a few minutes. We\u2019ll send you an email notification when your course is ready',
+  },
+  goToAiStudio: {
+    id: 'course-authoring.ai-studio.building.back',
+    defaultMessage: 'Go to AI Studio',
+  },
+  history: {
+    id: 'course-authoring.ai-studio.building.history',
+    defaultMessage: 'History',
+  },
+  creationHistory: {
+    id: 'course-authoring.ai-studio.landing.creationHistory',
+    defaultMessage: 'Creation history',
+  },
+  historyTitle: {
+    id: 'course-authoring.ai-studio.history.title',
+    defaultMessage: 'Your creation history',
+  },
+  historyNewCourse: {
+    id: 'course-authoring.ai-studio.history.newCourse',
+    defaultMessage: 'New course',
+  },
+  historySearchPlaceholder: {
+    id: 'course-authoring.ai-studio.history.searchPlaceholder',
+    defaultMessage: 'Search your creation',
+  },
+  historyGroupToday: {
+    id: 'course-authoring.ai-studio.history.groupToday',
+    defaultMessage: 'Today',
+  },
+  historyGroupOlder: {
+    id: 'course-authoring.ai-studio.history.groupOlder',
+    defaultMessage: 'Older',
+  },
+  historyEmpty: {
+    id: 'course-authoring.ai-studio.history.empty',
+    defaultMessage: 'No course creations yet.',
+  },
+  historyEmptySearch: {
+    id: 'course-authoring.ai-studio.history.emptySearch',
+    defaultMessage: 'No creations match your search.',
+  },
+  historyLoading: {
+    id: 'course-authoring.ai-studio.history.loading',
+    defaultMessage: 'Loading',
+    description: 'Screen reader label for the spinner shown while loading course creation history.',
+  },
+  historyStageInit: {
+    id: 'course-authoring.ai-studio.history.stage.init',
+    defaultMessage: 'Setting up…',
+  },
+  historyStageMetadata: {
+    id: 'course-authoring.ai-studio.history.stage.metadata',
+    defaultMessage: 'Collecting course details…',
+  },
+  historyStageOutline: {
+    id: 'course-authoring.ai-studio.history.stage.outline',
+    defaultMessage: 'Drafting outline…',
+  },
+  historyStageComponentPlan: {
+    id: 'course-authoring.ai-studio.history.stage.componentPlan',
+    defaultMessage: 'Planning components…',
+  },
+  historyStageScripts: {
+    id: 'course-authoring.ai-studio.history.stage.scripts',
+    defaultMessage: 'Generating scripts…',
+  },
+  historyStageBuilding: {
+    id: 'course-authoring.ai-studio.history.stage.building',
+    defaultMessage: 'Building course…',
+  },
+  historyStageCompleted: {
+    id: 'course-authoring.ai-studio.history.stage.completed',
+    defaultMessage: 'Completed',
+  },
+  historyStageFailed: {
+    id: 'course-authoring.ai-studio.history.stage.failed',
+    defaultMessage: 'Failed',
+  },
+  historyUntitled: {
+    id: 'course-authoring.ai-studio.history.untitled',
+    defaultMessage: 'Untitled course',
+  },
+  progressTitle: {
+    id: 'course-authoring.ai-studio.history.progress.title',
+    defaultMessage: 'Creation progress',
+  },
+  progressOutline: {
+    id: 'course-authoring.ai-studio.history.progress.outline',
+    defaultMessage: 'Course outline',
+  },
+  progressScripts: {
+    id: 'course-authoring.ai-studio.history.progress.scripts',
+    defaultMessage: 'Script generation',
+  },
+  progressAssembly: {
+    id: 'course-authoring.ai-studio.history.progress.assembly',
+    defaultMessage: 'Course assembly',
+  },
+  buildSuccessTitle: {
+    id: 'course-authoring.ai-studio.building.success.title',
+    defaultMessage: 'Course created successfully',
+  },
+  viewCourseCta: {
+    id: 'course-authoring.ai-studio.building.success.cta',
+    defaultMessage: 'View Course',
+  },
+  // Component types
+  componentTypeText: {
+    id: 'course-authoring.ai-studio.componentType.text',
+    defaultMessage: 'Text',
+  },
+  componentTypeImage: {
+    id: 'course-authoring.ai-studio.componentType.image',
+    defaultMessage: 'Image',
+  },
+  componentTypeVideo: {
+    id: 'course-authoring.ai-studio.componentType.video',
+    defaultMessage: 'Video',
+  },
+  componentTypeMultipleChoice: {
+    id: 'course-authoring.ai-studio.componentType.multipleChoice',
+    defaultMessage: 'Multiple Choice',
+  },
+  componentTypeCheckbox: {
+    id: 'course-authoring.ai-studio.componentType.checkbox',
+    defaultMessage: 'Checkbox',
+  },
+  componentTypeTextInput: {
+    id: 'course-authoring.ai-studio.componentType.textInput',
+    defaultMessage: 'Text Input',
+  },
+  componentTypeDropdown: {
+    id: 'course-authoring.ai-studio.componentType.dropdown',
+    defaultMessage: 'Dropdown',
+  },
+  componentTypeNumerical: {
+    id: 'course-authoring.ai-studio.componentType.numerical',
+    defaultMessage: 'Numerical',
+  },
+  componentTypeInteractive: {
+    id: 'course-authoring.ai-studio.componentType.interactive',
+    defaultMessage: 'Interactive',
+  },
+  // Metadata group titles
+  metadataGroupSource: {
+    id: 'course-authoring.ai-studio.metadataGroup.source',
+    defaultMessage: 'Source',
+  },
+  metadataGroupAudience: {
+    id: 'course-authoring.ai-studio.metadataGroup.audience',
+    defaultMessage: 'Audience',
+  },
+  metadataGroupTone: {
+    id: 'course-authoring.ai-studio.metadataGroup.tone',
+    defaultMessage: 'Tone & Style',
+  },
+  metadataGroupStructure: {
+    id: 'course-authoring.ai-studio.metadataGroup.structure',
+    defaultMessage: 'Structure',
+  },
+  metadataGroupStrategy: {
+    id: 'course-authoring.ai-studio.metadataGroup.strategy',
+    defaultMessage: 'Content Strategy',
+  },
+  metadataGroupGoals: {
+    id: 'course-authoring.ai-studio.metadataGroup.goals',
+    defaultMessage: 'Goals & Outcomes',
+  },
+  // Metadata slot labels
+  metadataSlotSource: {
+    id: 'course-authoring.ai-studio.metadataSlot.source',
+    defaultMessage: 'Source',
+  },
+  metadataSlotTopic: {
+    id: 'course-authoring.ai-studio.metadataSlot.topic',
+    defaultMessage: 'Topic',
+  },
+  metadataSlotTitle: {
+    id: 'course-authoring.ai-studio.metadataSlot.title',
+    defaultMessage: 'Title',
+  },
+  metadataSlotTargetAudience: {
+    id: 'course-authoring.ai-studio.metadataSlot.targetAudience',
+    defaultMessage: 'Target Audience',
+  },
+  metadataSlotProficiency: {
+    id: 'course-authoring.ai-studio.metadataSlot.proficiency',
+    defaultMessage: 'Proficiency',
+  },
+  metadataSlotLanguage: {
+    id: 'course-authoring.ai-studio.metadataSlot.language',
+    defaultMessage: 'Language',
+  },
+  metadataSlotTone: {
+    id: 'course-authoring.ai-studio.metadataSlot.tone',
+    defaultMessage: 'Tone',
+  },
+  metadataSlotStyleTemplate: {
+    id: 'course-authoring.ai-studio.metadataSlot.styleTemplate',
+    defaultMessage: 'Style Template',
+  },
+  metadataSlotSections: {
+    id: 'course-authoring.ai-studio.metadataSlot.sections',
+    defaultMessage: 'Sections',
+  },
+  metadataSlotSubsectionsPerSection: {
+    id: 'course-authoring.ai-studio.metadataSlot.subsectionsPerSection',
+    defaultMessage: 'Subsections per Section',
+  },
+  metadataSlotUnitsPerSubsection: {
+    id: 'course-authoring.ai-studio.metadataSlot.unitsPerSubsection',
+    defaultMessage: 'Units per Subsection',
+  },
+  metadataSlotSourceType: {
+    id: 'course-authoring.ai-studio.metadataSlot.sourceType',
+    defaultMessage: 'Source Type',
+  },
+  metadataSlotInstructionalStrategy: {
+    id: 'course-authoring.ai-studio.metadataSlot.instructionalStrategy',
+    defaultMessage: 'Instructional Strategy',
+  },
+  metadataSlotComponentTypes: {
+    id: 'course-authoring.ai-studio.metadataSlot.componentTypes',
+    defaultMessage: 'Component Types',
+  },
+  metadataSlotVariant: {
+    id: 'course-authoring.ai-studio.metadataSlot.variant',
+    defaultMessage: 'Variant',
+  },
+  // Video variant dropdown (the AI-avatar option is shown only when the org
+  // has AI avatar configured — see ai_avatar_enabled in the metadata summary).
+  videoVariantLabel: {
+    id: 'course-authoring.ai-studio.brief.videoVariant',
+    defaultMessage: 'Video style',
+  },
+  videoVariantStaticLink: {
+    id: 'course-authoring.ai-studio.brief.videoVariant.staticLink',
+    defaultMessage: 'Static link (YouTube/Vimeo)',
+  },
+  videoVariantAvatar: {
+    id: 'course-authoring.ai-studio.brief.videoVariant.avatar',
+    defaultMessage: 'AI avatar',
+  },
+  // Interactive variant dropdown.
+  interactiveVariantLabel: {
+    id: 'course-authoring.ai-studio.brief.interactiveVariant',
+    defaultMessage: 'Interactive style',
+  },
+  interactiveVariantScenario: {
+    id: 'course-authoring.ai-studio.brief.interactiveVariant.scenario',
+    defaultMessage: 'Scenario based',
+  },
+  interactiveVariantRoleplay: {
+    id: 'course-authoring.ai-studio.brief.interactiveVariant.roleplay',
+    defaultMessage: 'Roleplay',
+  },
+  interactiveVariantSimulation: {
+    id: 'course-authoring.ai-studio.brief.interactiveVariant.simulation',
+    defaultMessage: 'Simulation',
+  },
+  metadataSlotLearningObjectives: {
+    id: 'course-authoring.ai-studio.metadataSlot.learningObjectives',
+    defaultMessage: 'Learning Objectives',
+  },
+  metadataSlotCourseOutcome: {
+    id: 'course-authoring.ai-studio.metadataSlot.courseOutcome',
+    defaultMessage: 'Course Outcome',
+  },
+  // Style Template options (stored lowercase; see STYLE_TEMPLATE_VALUES backend).
+  styleTemplateDefault: {
+    id: 'course-authoring.ai-studio.styleTemplate.default',
+    defaultMessage: 'Default',
+  },
+  styleTemplateModern: {
+    id: 'course-authoring.ai-studio.styleTemplate.modern',
+    defaultMessage: 'Modern',
+  },
+  // Common action labels (reused across components)
+  actionEdit: {
+    id: 'course-authoring.ai-studio.action.edit',
+    defaultMessage: 'Edit',
+  },
+  actionSave: {
+    id: 'course-authoring.ai-studio.action.save',
+    defaultMessage: 'Save',
+  },
+  actionCancel: {
+    id: 'course-authoring.ai-studio.action.cancel',
+    defaultMessage: 'Cancel',
+  },
+  actionClose: {
+    id: 'course-authoring.ai-studio.action.close',
+    defaultMessage: 'Close',
+  },
+  // Landing
+  removeFile: {
+    id: 'course-authoring.ai-studio.landing.removeFile',
+    defaultMessage: 'Remove file',
+  },
+  // Outline
+  untitledPlaceholder: {
+    id: 'course-authoring.ai-studio.outline.untitled',
+    defaultMessage: 'Untitled',
+  },
+  deleteUnit: {
+    id: 'course-authoring.ai-studio.outline.deleteUnit',
+    defaultMessage: 'Delete unit',
+  },
+  deleteSubsection: {
+    id: 'course-authoring.ai-studio.outline.deleteSubsection',
+    defaultMessage: 'Delete subsection',
+  },
+  deleteSection: {
+    id: 'course-authoring.ai-studio.outline.deleteSection',
+    defaultMessage: 'Delete section',
+  },
+  removeComponent: {
+    id: 'course-authoring.ai-studio.outline.removeComponent',
+    defaultMessage: 'Remove {label}',
+  },
+});
+
+export default messages;

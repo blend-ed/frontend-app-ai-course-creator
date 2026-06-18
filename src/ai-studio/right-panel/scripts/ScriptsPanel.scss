@@ -1,0 +1,147 @@
+.ai-studio-scripts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 27px;
+  height: 100%;
+  width: 100%;
+  padding: var(--pgn-spacing-spacer-5);
+  background: var(--pgn-color-white);
+
+  &__head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 28px;
+  }
+
+  &__title {
+    font-weight: var(--pgn-typography-font-weight-label);
+    font-size: 20px;
+    line-height: 28px;
+    color: var(--pgn-color-black);
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  // Colour comes from the soft-primary Badge variant (the platform accent);
+  // this class only handles layout.
+  &__counter.badge,
+  &__counter {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    height: 24px;
+    border-radius: 9px;
+    font-weight: var(--pgn-typography-font-weight-label);
+    font-size: var(--pgn-typography-font-size-label-x-small);
+    line-height: var(--pgn-typography-line-height-label-x-small);
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+
+    svg { flex-shrink: 0; }
+  }
+
+  &__scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 27px;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden auto;
+
+    // Slim neutral scrollbar matching the panel's gray palette.
+    // Chrome/Safari: style the pseudo-elements directly. The standard
+    // scrollbar-* props are scoped to Firefox below, because when they're set
+    // Chrome 121+ ignores ::-webkit-scrollbar and renders a near-invisible bar.
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--pgn-color-gray-400);
+      border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--pgn-color-gray-500);
+    }
+
+    // Firefox only (webkit browsers fail the -webkit-hyphens check).
+    @supports (scrollbar-width: thin) and (not (-webkit-hyphens: none)) {
+      scrollbar-width: thin;
+      scrollbar-color: var(--pgn-color-gray-400) transparent;
+    }
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+
+  &__cards-add {
+    display: flex;
+    align-items: center;
+    padding-top: 4px;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  &__cta.btn,
+  &__cta {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 0 var(--pgn-spacing-spacer-4);
+    height: 40px;
+    border-radius: 9px;
+    border: 0;
+    background: var(--pgn-color-blue-100);
+    color: var(--pgn-color-blue-900);
+    font-weight: var(--pgn-typography-font-weight-label);
+    font-size: var(--pgn-typography-font-size-label-medium);
+    line-height: var(--pgn-typography-line-height-label-medium);
+    letter-spacing: -.011em;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+
+    svg { color: var(--pgn-color-blue-900); }
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--pgn-color-blue-900);
+      background: var(--pgn-color-blue-200);
+      border: 0;
+      box-shadow: none;
+    }
+
+    &:disabled,
+    &[disabled] {
+      opacity: .5;
+      color: var(--pgn-color-blue-900);
+      background: var(--pgn-color-blue-100);
+    }
+  }
+}

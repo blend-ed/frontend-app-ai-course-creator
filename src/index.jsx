@@ -1,0 +1,92 @@
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
+import {
+  APP_INIT_ERROR, APP_READY,
+  getConfig, getPath,
+  initialize, mergeConfig,
+  subscribe,
+} from '@edx/frontend-platform';
+import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Navigate,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
+
+import AiStudioPage from './ai-studio';
+import AiStudioHistoryPage from './ai-studio/history/AiStudioHistoryPage';
+import messages from './i18n';
+import './index.scss';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // If cache is up to one hour old, no need to re-fetch.
+      staleTime: 60 * 60_000,
+    },
+  },
+});
+
+const App = () => {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route>
+        <Route path="/" element={<Navigate to="/ai-studio" replace />} />
+        <Route path="/ai-studio" element={<AiStudioPage />} />
+        <Route path="/ai-studio/history" element={<AiStudioHistoryPage />} />
+        <Route path="/ai-studio/:courseCreationId" element={<AiStudioPage />} />
+      </Route>,
+    ),
+    {
+      basename: getPath(getConfig().PUBLIC_PATH),
+    },
+  );
+
+  return (
+    <AppProvider wrapWithRouter={false}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </AppProvider>
+  );
+};
+
+subscribe(APP_READY, () => {
+  const root = createRoot(document.getElementById('root'));
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+});
+
+subscribe(APP_INIT_ERROR, (error) => {
+  const root = createRoot(document.getElementById('root'));
+  root.render(
+    <StrictMode>
+      <ErrorPage message={error.message} />
+    </StrictMode>,
+  );
+});
+
+initialize({
+  handlers: {
+    config: () => {
+      mergeConfig({
+        // Studio (CMS) base — the AI Course Creator plugin is mounted here under
+        // `/ai_course_creator`. All API calls resolve against this origin.
+        STUDIO_BASE_URL: process.env.STUDIO_BASE_URL || null,
+        SITE_NAME: process.env.SITE_NAME || null,
+      }, 'AiCourseCreatorConfig');
+    },
+  },
+  messages,
+  requireAuthenticatedUser: true,
+  hydrateAuthenticatedUser: true,
+});

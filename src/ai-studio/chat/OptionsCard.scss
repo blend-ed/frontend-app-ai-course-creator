@@ -1,0 +1,155 @@
+// Options card — matches Figma Frame 1618869873.
+//
+// Figma hex → blendxui CSS var:
+//   #E8E8E8 (outer border)   → --pgn-color-gray-300
+//   #E9E6E4 (divider)        → --pgn-color-gray-200
+//   #32312F (option label)   → --pgn-color-gray-950
+//   #646464 (muted label)    → --pgn-color-gray-900
+//   #838383 (close icon)     → --pgn-color-gray-800
+//   rgba(0,0,0,0.06) (check frame bg) → --pgn-color-gray-100
+
+.ai-studio-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pgn-spacing-spacer-2);
+  border: 1px solid var(--pgn-color-gray-300);
+  border-radius: 18px;
+  background: var(--pgn-color-white);
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--pgn-spacing-spacer-2);
+    padding: var(--pgn-spacing-spacer-4);
+  }
+
+  &__q {
+    flex: 1;
+    font-weight: var(--pgn-typography-font-weight-scale-medium);
+    font-size: var(--pgn-typography-font-size-scale-16);
+    line-height: 24px;
+    letter-spacing: -.011em;
+    color: var(--pgn-color-black);
+    margin: 0;
+    font-feature-settings: 'calt' off, 'liga' off;
+  }
+
+  &__close.btn,
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0;
+    color: var(--pgn-color-gray-800);
+    background: transparent;
+    border: 0;
+    border-radius: 9px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: var(--pgn-color-gray-50);
+      box-shadow: none;
+      color: var(--pgn-color-gray-800);
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      color: var(--pgn-color-gray-800);
+    }
+  }
+
+  &__hint {
+    color: var(--pgn-color-gray-900);
+    font-size: var(--pgn-typography-font-size-scale-12);
+    line-height: 20px;
+    padding: 0 var(--pgn-spacing-spacer-4);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pgn-spacing-spacer-1);
+    padding: 0 var(--pgn-spacing-spacer-4) 12px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    height: 46px;
+    // Pad the hover background so it shows around the option at the start/end,
+    // then bleed it back out so the checkbox still aligns with the heading and
+    // the dividers stay full-width.
+    padding: 8px;
+    margin: 0 -8px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--pgn-color-gray-50);
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background: var(--pgn-color-gray-200);
+    width: 100%;
+  }
+
+  &__check-frame {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    background: var(--pgn-color-gray-100);
+    border-radius: 9px;
+    flex-shrink: 0;
+  }
+
+  &__checkbox {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 14px;
+    height: 14px;
+    background: var(--pgn-color-white);
+    border: 1px solid var(--pgn-color-gray-400);
+    border-radius: 4.5px;
+    color: var(--pgn-color-white);
+
+    &.is-checked {
+      background: var(--pgn-color-blue-700);
+      border-color: var(--pgn-color-blue-700);
+    }
+  }
+
+  &__label {
+    flex: 1;
+    font-size: var(--pgn-typography-font-size-scale-14);
+    font-weight: var(--pgn-typography-font-weight-normal);
+    line-height: 24px;
+    letter-spacing: -.015em;
+    color: var(--pgn-color-gray-950);
+    font-feature-settings: 'calt' off, 'liga' off;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 var(--pgn-spacing-spacer-4) var(--pgn-spacing-spacer-3);
+  }
+}

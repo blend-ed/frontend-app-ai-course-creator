@@ -1,0 +1,13 @@
+@use "@openedx/paragon/styles/css/core/custom-media-breakpoints" as paragonCustomMediaBreakpoints;
+
+// Fill the blendxui-only design tokens the ported ai-studio styles expect.
+@import "./paragon-compat";
+
+// The AI Course Creator is a full-viewport split-view workspace, so the app
+// root must fill the window. Component-level styles live alongside each
+// component (imported directly in the JSX).
+html,
+body,
+#root {
+  height: 100%;
+}

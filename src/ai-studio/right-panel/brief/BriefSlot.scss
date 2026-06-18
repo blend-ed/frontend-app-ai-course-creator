@@ -1,0 +1,189 @@
+@keyframes ai-studio-slot-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.ai-studio-slot {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pgn-spacing-spacer-4);
+  padding: var(--pgn-spacing-spacer-4);
+  background: var(--pgn-color-white);
+  border: 1px solid var(--pgn-color-gray-200);
+  border-radius: 12px;
+  width: 100%;
+  flex-shrink: 0;
+
+  &--active {
+    border-color: var(--pgn-color-gray-700);
+  }
+
+  // Row stretches vertically with content; badge stays pinned top so it
+  // doesn't drift into the middle of multi-line values.
+  &__row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--pgn-spacing-spacer-4);
+    width: 100%;
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--pgn-spacing-spacer-3);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__badge {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  &--filled &__badge {
+    background: var(--pgn-color-green-100);
+  }
+
+  &--filled &__badge-icon {
+    color: var(--pgn-color-green-700);
+  }
+
+  &--active &__badge {
+    background: var(--pgn-color-blue-100);
+  }
+
+  &--active &__badge-icon {
+    color: var(--pgn-color-blue-700);
+    animation: ai-studio-slot-spin 1.2s linear infinite;
+  }
+
+  &--pending &__badge {
+    background: var(--pgn-color-gray-100);
+  }
+
+  &--pending &__badge-icon {
+    color: var(--pgn-color-gray-800);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  // Label/X Small — Figma "Label/X Small" (12 / 16, weight 500).
+  &__label {
+    font-weight: var(--pgn-typography-font-weight-label);
+    font-size: var(--pgn-typography-font-size-label-x-small);
+    line-height: var(--pgn-typography-line-height-label-x-small);
+    color: var(--pgn-color-gray-900);
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  // Label/Medium — Figma "Label/Medium" (16 / 24, weight 500).
+  &__value {
+    font-weight: var(--pgn-typography-font-weight-label);
+    font-size: var(--pgn-typography-font-size-label-medium);
+    line-height: var(--pgn-typography-line-height-label-medium);
+    letter-spacing: -.011em;
+    color: var(--pgn-color-gray-950);
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    width: 100%;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  &--pending &__value {
+    color: var(--pgn-color-gray-900);
+  }
+
+  // Inline editable value — reads like the static value, no box or tint.
+  &__input {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+    font-weight: var(--pgn-typography-font-weight-label);
+    font-size: var(--pgn-typography-font-size-label-medium);
+    line-height: var(--pgn-typography-line-height-label-medium);
+    letter-spacing: -.011em;
+    color: var(--pgn-color-gray-950);
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  // Hide the native number spinners.
+  &__input--number {
+    width: 96px;
+    -webkit-appearance: textfield;
+    appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--pgn-spacing-spacer-2);
+    width: 100%;
+  }
+
+  // Fixed-choice value (e.g. Style Template) — a borderless toggle that reads
+  // like the static value with a chevron, not a button.
+  &__select-toggle.btn,
+  &__select-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pgn-spacing-spacer-1);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    font-weight: var(--pgn-typography-font-weight-label);
+    font-size: var(--pgn-typography-font-size-label-medium);
+    line-height: var(--pgn-typography-line-height-label-medium);
+    letter-spacing: -.011em;
+    color: var(--pgn-color-gray-950);
+
+    &::after {
+      display: none; // hide Paragon's default caret — we render our own chevron
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: transparent;
+      box-shadow: none;
+      color: var(--pgn-color-gray-950);
+    }
+  }
+}

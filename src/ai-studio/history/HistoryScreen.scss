@@ -1,0 +1,264 @@
+// Custom hover card (portaled to <body> by HoverCard, positioned via inline
+// `position: fixed`). No arrow, per Figma. Matches Frame 1618870374.
+.ai-studio-history__progress-popover {
+  box-sizing: border-box;
+  z-index: 1080;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pgn-spacing-spacer-3); // 12px between title and step list
+  width: 221px;
+  padding: var(--pgn-spacing-spacer-4); // 16px
+  background: var(--pgn-color-white);
+  border: 1px solid var(--pgn-color-gray-200);
+  box-shadow: 0 2px 8px rgb(0 0 0 / .05);
+  border-radius: 12px;
+}
+
+.ai-studio-history {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background: var(--pgn-color-white);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden auto;
+  padding: 10px var(--pgn-spacing-spacer-5) var(--pgn-spacing-spacer-5);
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pgn-spacing-spacer-5);
+    width: 800px;
+    max-width: 100%;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-height: 40px;
+  }
+
+  h1.ai-studio-history__title {
+    font-weight: var(--pgn-typography-font-weight-scale-medium);
+    font-size: 20px;
+    line-height: 28px;
+    color: var(--pgn-color-black);
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  &__new-cta.btn,
+  &__new-cta {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--pgn-spacing-spacer-2);
+    padding: 0 var(--pgn-spacing-spacer-4);
+    height: 40px;
+    border-radius: 9px;
+  }
+
+  &__search.pgn__searchfield {
+    width: 100%;
+    border: 1px solid var(--pgn-color-gray-400);
+    border-radius: 9px;
+    background: var(--pgn-color-white);
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: var(--pgn-spacing-spacer-5) 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pgn-spacing-spacer-4);
+    width: 100%;
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--pgn-spacing-spacer-3);
+    width: 100%;
+  }
+
+  &__group-label {
+    font-weight: var(--pgn-typography-font-weight-scale-medium);
+    font-size: var(--pgn-typography-font-size-scale-12);
+    line-height: 16px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--pgn-color-gray-800);
+    margin: 0;
+    width: 100%;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pgn-spacing-spacer-1);
+    width: 100%;
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--pgn-spacing-spacer-1);
+    padding: var(--pgn-spacing-spacer-3);
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-radius: 9px;
+    cursor: pointer;
+    text-align: left;
+    transition: background .15s ease;
+
+    &:hover,
+    &:focus {
+      background: var(--pgn-color-gray-50);
+      outline: none;
+    }
+  }
+
+  &__row-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 24px;
+  }
+
+  &__row-title {
+    flex: 1;
+    min-width: 0;
+    font-weight: var(--pgn-typography-font-weight-scale-medium);
+    font-size: var(--pgn-typography-font-size-scale-16);
+    line-height: 24px;
+    letter-spacing: -.011em;
+    color: var(--pgn-color-gray-950);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  &__row-date {
+    font-weight: var(--pgn-typography-font-weight-normal);
+    font-size: 11px;
+    line-height: 16px;
+    color: var(--pgn-color-gray-800);
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  &__row-shimmer {
+    font-weight: var(--pgn-typography-font-weight-normal);
+    font-size: 11px;
+    line-height: 16px;
+    background: linear-gradient(91.39deg,
+        var(--pgn-color-gray-800) 18.66%,
+        var(--pgn-color-gray-400) 24.86%,
+        var(--pgn-color-gray-800) 29.45%,
+        var(--pgn-color-gray-800) 46.95%,
+        var(--pgn-color-gray-400) 49.52%,
+        var(--pgn-color-gray-800) 52.83%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: ai-studio-shimmer-text 2.2s linear infinite;
+  }
+
+  &__progress-title {
+    font-weight: var(--pgn-typography-font-weight-scale-medium);
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: var(--pgn-color-gray-900);
+    margin: 0;
+  }
+
+  &__progress-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pgn-spacing-spacer-2);
+  }
+
+  &__progress-step {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--pgn-spacing-spacer-2);
+    height: 20px;
+  }
+
+  &__progress-label {
+    font-weight: var(--pgn-typography-font-weight-normal);
+    font-size: var(--pgn-typography-font-size-scale-12);
+    line-height: 20px;
+    letter-spacing: -.006em;
+    flex: 1;
+    min-width: 0;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  &__progress-step--done .ai-studio-history__progress-label {
+    color: var(--pgn-color-gray-900);
+  }
+
+  &__progress-step--active .ai-studio-history__progress-label {
+    color: var(--pgn-color-gray-950);
+  }
+
+  &__progress-step--pending .ai-studio-history__progress-label {
+    color: var(--pgn-color-gray-900);
+  }
+
+  &__progress-icon-done {
+    color: var(--pgn-color-success-600);
+    flex: none;
+  }
+
+  &__progress-icon-active {
+    color: var(--pgn-color-gray-800);
+    flex: none;
+  }
+
+  &__progress-icon-pending {
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: var(--pgn-color-white);
+    border: 1px solid var(--pgn-color-gray-400);
+    flex: none;
+    display: inline-block;
+  }
+
+  &__empty {
+    width: 100%;
+    text-align: center;
+    color: var(--pgn-color-gray-800);
+    font-size: var(--pgn-typography-font-size-scale-14);
+    line-height: 24px;
+    margin: var(--pgn-spacing-spacer-5) 0 0;
+  }
+}

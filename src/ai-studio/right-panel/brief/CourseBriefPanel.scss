@@ -1,0 +1,42 @@
+.ai-studio-brief {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pgn-spacing-spacer-5);
+  height: 100%;
+  width: 100%;
+  padding: var(--pgn-spacing-spacer-5);
+  background: var(--pgn-color-white);
+
+  &__title {
+    font-weight: var(--pgn-typography-font-weight-scale-medium);
+    font-size: 20px;
+    line-height: 28px;
+    color: var(--pgn-color-black);
+    margin: 0;
+    width: 100%;
+    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
+  }
+
+  &__scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--pgn-spacing-spacer-2);
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden auto;
+
+    // Hide scrollbar — scroll still works via wheel / trackpad / keyboard.
+    scrollbar-width: none;          // Firefox
+    -ms-overflow-style: none;       // IE / old Edge
+
+    &::-webkit-scrollbar {          // Chromium / Safari
+      width: 0;
+      height: 0;
+      display: none;
+    }
+  }
+
+}

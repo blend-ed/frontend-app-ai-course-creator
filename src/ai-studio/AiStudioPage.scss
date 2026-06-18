@@ -1,0 +1,32 @@
+// Force a flex column chain from AppWrapper down to `.ai-studio-page` so the
+// AI Studio flow can fill the full viewport height below the site header,
+// overriding AppWrapper's default `main` padding at the same time.
+.app-wrapper:has(.ai-studio-page) {
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+
+  .app-wrapper__content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 100vh;
+    min-width: 0;
+  }
+}
+
+main:has(.ai-studio-page) {
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.ai-studio-page {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--pgn-color-white);
+}
