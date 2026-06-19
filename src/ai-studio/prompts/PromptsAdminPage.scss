@@ -1,66 +1,67 @@
+// Neutral, framework-default styling — this MFE ships as a public plugin, so it
+// intentionally avoids any tenant/brand design system and leans on Paragon
+// defaults. Only minimal layout + the monospace prompt editor are styled here.
 .ai-studio-prompts {
-  max-width: 920px;
-
-  &__back {
-    display: inline-flex;
-    align-items: center;
-    gap: .25rem;
-    margin-bottom: 1rem;
-    font-size: .875rem;
+  &__container {
+    max-width: 920px;
   }
 
-  &__title {
-    margin-bottom: .25rem;
+  &__back.btn {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  &__header {
+    margin-bottom: 1.5rem;
   }
 
   &__subtitle {
-    margin-bottom: 1.5rem;
+    max-width: 60ch;
+    color: var(--pgn-color-gray-600);
   }
 
-  &__form {
-    margin-bottom: 1.5rem;
-  }
-
-  &__form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: .5rem;
-    margin-top: .75rem;
-  }
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: .75rem;
-  }
-
-  &__row {
-    border: 1px solid var(--pgn-color-light-400, #e9e6e4);
-    border-radius: .375rem;
-    padding: .75rem;
-  }
-
-  &__row-head {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-
-  &__row-actions {
-    margin-left: auto;
+  &__scope {
     display: inline-flex;
+    align-items: center;
     gap: .25rem;
+    margin-top: .75rem;
+    font-size: .875rem;
+    color: var(--pgn-color-gray-600);
   }
 
-  &__row-body {
-    margin: .5rem 0 0;
-    padding: .5rem;
-    background: var(--pgn-color-light-200, #f5f3f2);
-    border-radius: .25rem;
+  &__scope-icon {
+    flex-shrink: 0;
+  }
+
+  &__org-select {
+    max-width: 18rem;
+  }
+
+  &__section-title {
+    margin-bottom: .25rem;
+  }
+
+  &__section-hint {
+    margin-bottom: 1rem;
+    font-size: .875rem;
+    color: var(--pgn-color-gray-600);
+  }
+
+  // Monospace so $placeholders read clearly.
+  &__textarea {
+    font-family: var(--pgn-typography-font-family-monospace, monospace);
     font-size: .8125rem;
-    white-space: pre-wrap;
-    word-break: break-word;
-    max-height: 12rem;
-    overflow: auto;
+  }
+
+  &__feedback {
+    font-size: .75rem;
+
+    &--saved {
+      color: var(--pgn-color-success-500);
+    }
+
+    &--error {
+      color: var(--pgn-color-danger-500);
+    }
   }
 }

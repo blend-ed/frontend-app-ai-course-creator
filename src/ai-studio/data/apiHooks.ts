@@ -223,16 +223,26 @@ export const useRefineStructure = () => {
 };
 
 // --- Prompt customization (staff admin) ---
-export const usePromptOverrides = () => useQuery({
-  queryKey: aiStudioKeys.promptOverrides(),
-  queryFn: () => api.fetchPromptOverrides(),
+// `organisationId` is the scope: a concrete org short_name, or '' for global.
+export const usePromptOverrides = (organisationId: string) => useQuery({
+  queryKey: aiStudioKeys.promptOverrides(organisationId),
+  queryFn: () => api.fetchPromptOverrides(organisationId),
 });
 
+// Built-in defaults are static for a deployment — cache them indefinitely.
+export const usePromptDefaults = () => useQuery({
+  queryKey: aiStudioKeys.promptDefaults(),
+  queryFn: api.fetchPromptDefaults,
+  staleTime: Infinity,
+});
+
+// Saves/deletes invalidate every scope's list (prefix match) so the active
+// scope refreshes without the mutation needing to know which org it was.
 export const useSavePromptOverride = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: api.savePromptOverride,
-    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptOverrides() }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...aiStudioKeys.all, 'prompt-overrides'] }),
   });
 };
 
@@ -240,20 +250,20 @@ export const useDeletePromptOverride = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (pk: string) => api.deletePromptOverride(pk),
-    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptOverrides() }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...aiStudioKeys.all, 'prompt-overrides'] }),
   });
 };
 
-export const usePromptAddenda = () => useQuery({
-  queryKey: aiStudioKeys.promptAddenda(),
-  queryFn: () => api.fetchPromptAddenda(),
+export const usePromptAddenda = (organisationId: string) => useQuery({
+  queryKey: aiStudioKeys.promptAddenda(organisationId),
+  queryFn: () => api.fetchPromptAddenda(organisationId),
 });
 
 export const useSavePromptAddendum = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: api.savePromptAddendum,
-    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptAddenda() }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...aiStudioKeys.all, 'prompt-addenda'] }),
   });
 };
 
@@ -261,6 +271,6 @@ export const useDeletePromptAddendum = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (pk: string) => api.deletePromptAddendum(pk),
-    onSuccess: () => qc.invalidateQueries({ queryKey: aiStudioKeys.promptAddenda() }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...aiStudioKeys.all, 'prompt-addenda'] }),
   });
 };

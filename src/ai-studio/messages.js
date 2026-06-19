@@ -532,6 +532,124 @@ const messages = defineMessages({
     id: 'course-authoring.ai-studio.action.delete',
     defaultMessage: 'Delete',
   },
+  // Prompt editor (card-based admin page)
+  promptsBack: {
+    id: 'course-authoring.ai-studio.prompts.back',
+    defaultMessage: 'Back to AI Studio',
+  },
+  promptsHeading: {
+    id: 'course-authoring.ai-studio.prompts.heading',
+    defaultMessage: 'AI prompt settings',
+  },
+  promptsScopeLabel: {
+    id: 'course-authoring.ai-studio.prompts.scope.label',
+    defaultMessage: 'Organisation',
+  },
+  promptsScopeContext: {
+    id: 'course-authoring.ai-studio.prompts.scope.context',
+    defaultMessage: 'Editing prompts for {org}',
+  },
+  promptsNoOrg: {
+    id: 'course-authoring.ai-studio.prompts.scope.none',
+    defaultMessage: 'No organisation is available, so prompt settings cannot be edited here.',
+  },
+  promptsLoadError: {
+    id: 'course-authoring.ai-studio.prompts.loadError',
+    defaultMessage: 'Could not load prompt settings. Please try again.',
+  },
+  promptsOverridesHint: {
+    id: 'course-authoring.ai-studio.prompts.overrides.hint',
+    defaultMessage: 'Replace a built-in prompt template. Reference dynamic values with $placeholders (e.g. $course_title).',
+  },
+  promptsAddendumHeading: {
+    id: 'course-authoring.ai-studio.prompts.addendum.heading',
+    defaultMessage: 'Prompt addendum',
+  },
+  promptsAddendumHint: {
+    id: 'course-authoring.ai-studio.prompts.addendum.hint',
+    defaultMessage: 'Extra instructions appended to the chat and generation prompts, without replacing the base prompts.',
+  },
+  promptsBodyPlaceholder: {
+    id: 'course-authoring.ai-studio.prompts.body.placeholder',
+    defaultMessage: 'Using the default prompt. Type here to override it…',
+  },
+  promptsAddendumPlaceholder: {
+    id: 'course-authoring.ai-studio.prompts.addendum.placeholder',
+    defaultMessage: 'No additional instructions. Type here to add some…',
+  },
+  promptsActiveLabel: {
+    id: 'course-authoring.ai-studio.prompts.active',
+    defaultMessage: 'Active',
+  },
+  promptsActiveHint: {
+    id: 'course-authoring.ai-studio.prompts.active.hint',
+    defaultMessage: 'When off, this entry is saved but ignored (the default is used).',
+  },
+  promptsReset: {
+    id: 'course-authoring.ai-studio.prompts.reset',
+    defaultMessage: 'Reset to default',
+  },
+  promptsCustomizedBadge: {
+    id: 'course-authoring.ai-studio.prompts.customized',
+    defaultMessage: 'Customized',
+  },
+  promptsSaved: {
+    id: 'course-authoring.ai-studio.prompts.saved',
+    defaultMessage: 'Saved.',
+  },
+  promptsError: {
+    id: 'course-authoring.ai-studio.prompts.error',
+    defaultMessage: 'Could not save. Please try again.',
+  },
+  // Prompt key labels
+  promptKeySystem: {
+    id: 'course-authoring.ai-studio.prompts.key.system',
+    defaultMessage: 'Chat system prompt',
+  },
+  promptKeySystemHelp: {
+    id: 'course-authoring.ai-studio.prompts.key.system.help',
+    defaultMessage: 'Governs the assistant that interviews the author and collects course metadata.',
+  },
+  promptKeyComponentPlan: {
+    id: 'course-authoring.ai-studio.prompts.key.componentPlan',
+    defaultMessage: 'Component plan',
+  },
+  promptKeyComponentPlanHelp: {
+    id: 'course-authoring.ai-studio.prompts.key.componentPlan.help',
+    defaultMessage: 'Decides which component types each unit should contain.',
+  },
+  promptKeyScriptGeneration: {
+    id: 'course-authoring.ai-studio.prompts.key.scriptGeneration',
+    defaultMessage: 'Script generation',
+  },
+  promptKeyScriptGenerationHelp: {
+    id: 'course-authoring.ai-studio.prompts.key.scriptGeneration.help',
+    defaultMessage: 'Turns a unit into the content scripts for each component.',
+  },
+  promptKeyScriptRefinement: {
+    id: 'course-authoring.ai-studio.prompts.key.scriptRefinement',
+    defaultMessage: 'Script refinement',
+  },
+  promptKeyScriptRefinementHelp: {
+    id: 'course-authoring.ai-studio.prompts.key.scriptRefinement.help',
+    defaultMessage: 'Revises an existing script in response to author feedback.',
+  },
+  promptKeyStructureRefinement: {
+    id: 'course-authoring.ai-studio.prompts.key.structureRefinement',
+    defaultMessage: 'Structure refinement',
+  },
+  promptKeyStructureRefinementHelp: {
+    id: 'course-authoring.ai-studio.prompts.key.structureRefinement.help',
+    defaultMessage: 'Revises the course outline in response to author feedback.',
+  },
+  promptKeyOlxGeneration: {
+    id: 'course-authoring.ai-studio.prompts.key.olxGeneration',
+    defaultMessage: 'OLX generation',
+  },
+  promptKeyOlxGenerationHelp: {
+    id: 'course-authoring.ai-studio.prompts.key.olxGeneration.help',
+    defaultMessage: 'Converts a content script into the OLX a component is built from.',
+  },
 });
 
 export default messages;

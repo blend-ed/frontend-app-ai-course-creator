@@ -8,6 +8,7 @@ export const aiStudioKeys = {
   componentPlan: (id: string) => [...aiStudioKeys.all, 'component-plan', id] as const,
   components: (id: string) => [...aiStudioKeys.all, 'components', id] as const,
   buildProgress: (id: string) => [...aiStudioKeys.all, 'build', id] as const,
-  promptOverrides: () => [...aiStudioKeys.all, 'prompt-overrides'] as const,
-  promptAddenda: () => [...aiStudioKeys.all, 'prompt-addenda'] as const,
+  promptOverrides: (organisationId: string) => [...aiStudioKeys.all, 'prompt-overrides', organisationId] as const,
+  promptAddenda: (organisationId: string) => [...aiStudioKeys.all, 'prompt-addenda', organisationId] as const,
+  promptDefaults: () => [...aiStudioKeys.all, 'prompt-defaults'] as const,
 };

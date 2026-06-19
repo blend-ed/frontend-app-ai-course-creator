@@ -240,10 +240,33 @@ export const promptOverridesUrl = () => `${aiStudioBaseUrl()}/prompts/overrides/
 export const promptOverrideUrl = (pk: string) => `${aiStudioBaseUrl()}/prompts/overrides/${pk}/`;
 export const promptAddendaUrl = () => `${aiStudioBaseUrl()}/prompts/addenda/`;
 export const promptAddendumUrl = (pk: string) => `${aiStudioBaseUrl()}/prompts/addenda/${pk}/`;
+export const promptDefaultsUrl = () => `${aiStudioBaseUrl()}/prompts/defaults/`;
 
-export async function fetchPromptOverrides(): Promise<PromptOverride[]> {
-  const { data } = await getAuthenticatedHttpClient().get(promptOverridesUrl());
-  return camelCaseObject(data) as PromptOverride[];
+// `organisationId` is always sent (blank ⇒ global scope) so a scope never
+// leaks rows from another org.
+const withOrgQuery = (base: string, organisationId: string) => (
+  `${base}?organisation_id=${encodeURIComponent(organisationId)}`
+);
+
+// Tolerate either a bare array or a DRF paginated `{ results: [] }` envelope.
+const asList = <T>(data: unknown): T[] => {
+  if (Array.isArray(data)) {
+    return data as T[];
+  }
+  const results = (data as { results?: unknown })?.results;
+  return Array.isArray(results) ? (results as T[]) : [];
+};
+
+export async function fetchPromptOverrides(organisationId: string): Promise<PromptOverride[]> {
+  const { data } = await getAuthenticatedHttpClient().get(withOrgQuery(promptOverridesUrl(), organisationId));
+  return asList<PromptOverride>(camelCaseObject(data));
+}
+
+// Built-in default template per prompt key, for pre-filling the editor. Keyed
+// by the snake_case prompt keys, so intentionally NOT run through camelCase.
+export async function fetchPromptDefaults(): Promise<Record<string, string>> {
+  const { data } = await getAuthenticatedHttpClient().get(promptDefaultsUrl());
+  return (data || {}) as Record<string, string>;
 }
 
 export async function savePromptOverride(p: PromptOverrideInput): Promise<PromptOverride> {
@@ -263,9 +286,9 @@ export async function deletePromptOverride(pk: string): Promise<void> {
   await getAuthenticatedHttpClient().delete(promptOverrideUrl(pk));
 }
 
-export async function fetchPromptAddenda(): Promise<PromptAddendum[]> {
-  const { data } = await getAuthenticatedHttpClient().get(promptAddendaUrl());
-  return camelCaseObject(data) as PromptAddendum[];
+export async function fetchPromptAddenda(organisationId: string): Promise<PromptAddendum[]> {
+  const { data } = await getAuthenticatedHttpClient().get(withOrgQuery(promptAddendaUrl(), organisationId));
+  return asList<PromptAddendum>(camelCaseObject(data));
 }
 
 export async function savePromptAddendum(p: PromptAddendumInput): Promise<PromptAddendum> {

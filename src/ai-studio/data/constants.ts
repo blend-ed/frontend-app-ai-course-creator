@@ -39,3 +39,14 @@ export const componentTypeMeta = (id: string) => (
 );
 
 export const ACCEPTED_FILE_TYPES = '.pdf,.docx,.txt';
+
+// Overridable prompt keys with display labels — mirror PromptOverride.Key in
+// the backend model (and PROMPT_KEYS in data/types.ts). Order = display order.
+export const PROMPT_KEY_FIELDS = [
+  { id: 'system', label: messages.promptKeySystem, help: messages.promptKeySystemHelp },
+  { id: 'component_plan', label: messages.promptKeyComponentPlan, help: messages.promptKeyComponentPlanHelp },
+  { id: 'script_generation', label: messages.promptKeyScriptGeneration, help: messages.promptKeyScriptGenerationHelp },
+  { id: 'script_refinement', label: messages.promptKeyScriptRefinement, help: messages.promptKeyScriptRefinementHelp },
+  { id: 'structure_refinement', label: messages.promptKeyStructureRefinement, help: messages.promptKeyStructureRefinementHelp },
+  { id: 'olx_generation', label: messages.promptKeyOlxGeneration, help: messages.promptKeyOlxGenerationHelp },
+] as const;
