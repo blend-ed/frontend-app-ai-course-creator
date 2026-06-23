@@ -1,16 +1,31 @@
 @keyframes ai-studio-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes ai-studio-shimmer-text {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 @keyframes ai-studio-shimmer-bg {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .ai-studio-spin {
@@ -20,9 +35,15 @@
 .ai-studio-flow {
   display: grid;
   grid-template-columns: 1fr;
+  // Constrain the single implicit row to the container height — otherwise the
+  // row sizes to its content (max-content) and the columns overflow past the
+  // 100vh box, scrolling the whole page instead of their own panels.
+  grid-template-rows: minmax(0, 1fr);
   flex: 1 1 auto;
   min-height: 0;
+  height: 100%;
   width: 100%;
+  overflow: hidden;
   background: var(--pgn-color-white);
 
   &--split {
@@ -75,7 +96,7 @@
     display: flex;
     min-height: 0;
 
-    & > * {
+    &>* {
       flex: 1;
       min-width: 0;
     }

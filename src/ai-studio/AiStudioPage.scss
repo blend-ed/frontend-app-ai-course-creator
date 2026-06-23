@@ -1,25 +1,22 @@
-// Force a flex column chain from AppWrapper down to `.ai-studio-page` so the
-// AI Studio flow can fill the full viewport height below the site header,
-// overriding AppWrapper's default `main` padding at the same time.
-.app-wrapper:has(.ai-studio-page) {
+// AI Studio is a fixed full-viewport app. Lock the real document chain that this
+// MFE actually renders — `html > body > #root > .ai-studio-page` (there is no
+// `.app-wrapper`/`main` shell here, AppProvider mounts straight onto #root) — to
+// 100vh and clip overflow, so the flow scrolls internally instead of growing the
+// page. Scoped via `:has(.ai-studio-page)` so the History/Prompts routes (which
+// share #root) keep their normal document scroll.
+html:has(.ai-studio-page),
+body:has(.ai-studio-page) {
   height: 100vh;
   min-height: 100vh;
   overflow: hidden;
-
-  .app-wrapper__content {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    min-height: 100vh;
-    min-width: 0;
-  }
 }
 
-main:has(.ai-studio-page) {
-  padding: 0;
-  flex: 1 1 auto;
+#root:has(.ai-studio-page) {
+  height: 100vh;
   min-height: 0;
   display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .ai-studio-page {

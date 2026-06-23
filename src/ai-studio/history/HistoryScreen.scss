@@ -23,7 +23,7 @@
   justify-content: center;
   align-items: flex-start;
   overflow: hidden auto;
-  padding: 10px var(--pgn-spacing-spacer-5) var(--pgn-spacing-spacer-5);
+  padding: var(--pgn-spacing-spacer-5);
 
   &__container {
     display: flex;
@@ -71,6 +71,7 @@
     border: 1px solid var(--pgn-color-gray-400);
     border-radius: 9px;
     background: var(--pgn-color-white);
+    overflow: hidden;
   }
 
   &__loading {

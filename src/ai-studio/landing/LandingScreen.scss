@@ -25,7 +25,7 @@
 
   // Use element+class selector to beat Paragon's default `h1` rule.
   h1.ai-studio-landing__heading {
-    font-size: var(--pgn-typography-font-size-h3-base);
+    font-size: var(--pgn-typography-font-size-h1-base);
     line-height: 48px;
     letter-spacing: -.01em;
     font-weight: var(--pgn-typography-font-weight-scale-medium);
@@ -37,7 +37,7 @@
   }
 
   p.ai-studio-landing__subtitle {
-    font-size: var(--pgn-typography-font-size-scale-14);
+    font-size: var(--pgn-typography-font-size-scale-16);
     line-height: 24px;
     letter-spacing: -.015em;
     font-weight: var(--pgn-typography-font-weight-normal);
@@ -58,7 +58,7 @@
     width: 100%;
     min-height: 122px;
     background: var(--pgn-color-gray-0);
-    border: 1px solid var(--pgn-color-gray-400);
+    border: 1px solid var(--pgn-color-gray-200);
     border-radius: 18px;
   }
 
