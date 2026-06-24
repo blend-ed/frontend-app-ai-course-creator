@@ -81,15 +81,28 @@ const CourseCreatorFlow = ({ courseCreationId }) => {
       sendChat.mutate(
         { message, files },
         {
-          onSuccess: (res) => navigate(`/ai-studio/${res.courseCreationId}`, { replace: true }),
+          onSuccess: (res) => {
+            // The agent only creates a session once it can infer a course
+            // topic. For a vague first message it replies with a clarifying
+            // question and returns no id — stay on landing and show the reply
+            // rather than navigating to /ai-studio/null (which 404s).
+            if (res?.courseCreationId) {
+              navigate(`/ai-studio/${res.courseCreationId}`, { replace: true });
+            }
+          },
         },
       );
     };
+    // Surface the agent's clarifying reply when it didn't create a session yet.
+    const landingReply = sendChat.data && !sendChat.data.courseCreationId
+      ? sendChat.data.message
+      : undefined;
     return (
       <LandingScreen
         onSubmit={onLandingSubmit}
         isSubmitting={sendChat.isPending}
         error={sendChat.error}
+        reply={landingReply}
         onHistoryClick={() => navigate('/ai-studio/history')}
       />
     );

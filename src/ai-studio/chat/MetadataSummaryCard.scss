@@ -1,0 +1,39 @@
+// Inline confirmation card — shows the metadata the agent inferred in Phase 2A
+// ("Here's what I gathered. Does this look correct?") before it is persisted to
+// the Course Brief. Mirrors the assistant message's left alignment.
+.ai-studio-summary-card {
+  align-self: flex-start;
+  max-width: 85%;
+  margin-bottom: calc(var(--pgn-spacing-spacer-base) * 1.5);
+  padding: 12px 16px;
+  background: var(--pgn-color-gray-100);
+  border: 1px solid var(--pgn-color-gray-200);
+  border-radius: 12px;
+
+  &__row {
+    display: flex;
+    gap: var(--pgn-spacing-spacer-2);
+    padding: 6px 0;
+
+    & + & {
+      border-top: 1px solid var(--pgn-color-gray-200);
+    }
+  }
+
+  &__label {
+    flex: 0 0 35%;
+    font-size: var(--pgn-typography-font-size-scale-12);
+    font-weight: var(--pgn-typography-font-weight-scale-medium);
+    line-height: 20px;
+    color: var(--pgn-color-gray-700);
+  }
+
+  &__value {
+    flex: 1 1 auto;
+    font-size: var(--pgn-typography-font-size-scale-14);
+    font-weight: var(--pgn-typography-font-weight-normal);
+    line-height: 20px;
+    color: var(--pgn-color-black);
+    white-space: pre-wrap;
+  }
+}
