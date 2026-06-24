@@ -17,7 +17,7 @@ import { ACCEPTED_FILE_TYPES } from '../data/constants';
 import './LandingScreen.scss';
 
 const LandingScreen = ({
-  onSubmit, isSubmitting, error, onHistoryClick,
+  onSubmit, isSubmitting, error, reply, onHistoryClick,
 }) => {
   const intl = useIntl();
   const [message, setMessage] = useState('');
@@ -60,6 +60,11 @@ const LandingScreen = ({
               className="ai-studio-landing__error"
             >
               {getAiErrorMessage(error, intl.formatMessage(messages.chatErrorFallback))}
+            </Alert>
+          )}
+          {reply && !error && !isSubmitting && (
+            <Alert variant="info" className="ai-studio-landing__reply">
+              {reply}
             </Alert>
           )}
           <form className="ai-studio-landing__composer" onSubmit={handleSubmit}>

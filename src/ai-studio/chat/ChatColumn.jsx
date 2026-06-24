@@ -6,6 +6,7 @@ import { useMessages, useSendChat } from '../data/apiHooks';
 import { getAiErrorMessage } from '../../generic/aiErrorMessage';
 import messages from '../messages';
 import ChatMessage from './ChatMessage';
+import MetadataSummaryCard from './MetadataSummaryCard';
 import OptionsCard from './OptionsCard';
 import TypingIndicator from './TypingIndicator';
 import Composer from './Composer';
@@ -17,6 +18,30 @@ const parseAssistant = (raw) => {
   } catch {
     return { message: raw };
   }
+};
+
+// Build an {id: label} lookup from a parsed assistant message's options, so a
+// user's reply (stored as raw option ids like "problem_first") can be shown
+// with its friendly label ("Problem First").
+const optionLabelMap = (parsed) => {
+  const map = {};
+  const choices = parsed?.options?.choices;
+  if (Array.isArray(choices)) {
+    choices.forEach((c) => {
+      if (c?.id != null) { map[String(c.id)] = c.label || String(c.id); }
+    });
+  }
+  return map;
+};
+
+// Replace a comma-joined list of option ids with their labels. Only transforms
+// when EVERY part matches an option id, so free-text answers pass through
+// untouched.
+const humanizeSelection = (content, labelMap) => {
+  if (!content || !labelMap) { return content; }
+  const parts = content.split(',').map((s) => s.trim());
+  const mapped = parts.map((p) => labelMap[p]);
+  return mapped.every((m) => m != null) ? mapped.join(', ') : content;
 };
 
 const extractUserAttachments = (toolCalls) => {
@@ -61,23 +86,34 @@ const ChatColumn = ({ courseCreationId, latestOptions, composerRef }) => {
     <div className="ai-studio-chat">
       <div ref={scrollRef} className="ai-studio-chat__log">
         <div className="ai-studio-chat__log-inner">
-          {chatMessages.map((m) => {
-            if (m.role === 'user') {
-              return (
-                <ChatMessage
-                  key={m.id}
-                  role="user"
-                  text={m.content}
-                  files={extractUserAttachments(m.toolCalls)}
-                />
-              );
-            }
-            if (m.role === 'assistant') {
-              const parsed = parseAssistant(m.content);
-              return <ChatMessage key={m.id} role="assistant" text={parsed.message} />;
-            }
-            return null;
-          })}
+          {(() => {
+            // Track the most recent assistant question's option labels so the
+            // following user reply renders friendly labels instead of raw ids.
+            let lastLabelMap = {};
+            return chatMessages.map((m) => {
+              if (m.role === 'user') {
+                return (
+                  <ChatMessage
+                    key={m.id}
+                    role="user"
+                    text={humanizeSelection(m.content, lastLabelMap)}
+                    files={extractUserAttachments(m.toolCalls)}
+                  />
+                );
+              }
+              if (m.role === 'assistant') {
+                const parsed = parseAssistant(m.content);
+                lastLabelMap = optionLabelMap(parsed);
+                return (
+                  <React.Fragment key={m.id}>
+                    <ChatMessage role="assistant" text={parsed.message} />
+                    <MetadataSummaryCard summary={parsed.metadata_summary} />
+                  </React.Fragment>
+                );
+              }
+              return null;
+            });
+          })()}
           {isPending && <TypingIndicator />}
           {!isPending && error && (
             <Alert variant="danger" icon={ErrorIcon} className="ai-studio-chat__error">
