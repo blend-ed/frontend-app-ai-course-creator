@@ -29,6 +29,14 @@
     font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
   }
 
+  &__progress {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
   // Colour comes from the soft-primary Badge variant (the platform accent);
   // this class only handles layout.
   &__counter.badge,

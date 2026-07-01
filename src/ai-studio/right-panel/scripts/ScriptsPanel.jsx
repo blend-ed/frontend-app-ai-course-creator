@@ -1,9 +1,11 @@
 import React, {
-  useEffect, useMemo, useRef, useState,
+  useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Badge, Form } from '@openedx/paragon';
-import { RiFileList3Line, RiInformationLine } from '@remixicon/react';
+import {
+  Button, Badge, Form, IconButton,
+} from '@openedx/paragon';
+import { RiFileList3Line, RiInformationLine, RiRefreshLine } from '@remixicon/react';
 import messages from '../../messages';
 import {
   useStructure,
@@ -41,7 +43,16 @@ const ScriptsPanel = ({ courseCreationId }) => {
   const allowedOrgs = orgInfo?.allowedOrganizations || [];
   const [currentUnitId, setCurrentUnitId] = useState(null);
   const [org, setOrg] = useState('');
-  const startedRef = useRef(false);
+
+  // autoStartedRef makes the initial generation run fire only once. A manual
+  // "resume" click supersedes any pass already in progress via runIdRef, and
+  // abortRef cancels that pass's in-flight request — so clicking resume on a
+  // stalled run abandons the stuck request and continues from current state,
+  // without ever running two overlapping loops (the backend has no per-unit
+  // lock, so overlap would double-generate and waste credits).
+  const autoStartedRef = useRef(false);
+  const runIdRef = useRef(0);
+  const abortRef = useRef(null);
 
   // Default to the user's first allowed org once Studio Home resolves.
   useEffect(() => {
@@ -65,13 +76,23 @@ const ScriptsPanel = ({ courseCreationId }) => {
     .filter((c) => c.script && c.script.length > 0).length;
   const allReady = totalPlanned > 0 && done >= totalPlanned;
 
-  // Kick off sequential generation for any unit whose planned components
-  // don't yet have non-empty scripts. The ref guard prevents re-entry when
-  // React Query re-renders us mid-loop.
-  useEffect(() => {
-    if (startedRef.current) { return; }
-    if (!flatUnits.length) { return; }
-    if (!planResp) { return; }
+  // Generate scripts for every unit whose planned components don't yet all
+  // have non-empty scripts, one unit at a time. The "pending" set is derived
+  // from current server state, so this is safe to re-run: already-scripted
+  // units are skipped here, and the backend skips them again (force=false,
+  // idempotent). That makes it both the initial driver and the manual resume
+  // handler for a stalled run — it continues from where it stopped, never from
+  // the beginning.
+  const runGeneration = useCallback(async () => {
+    if (!flatUnits.length || !planResp) { return; }
+
+    // Supersede any pass already in progress: claim a new run id and abort its
+    // in-flight request. This is what makes the resume button work mid-stall —
+    // the stuck request is cancelled and we restart from current server state,
+    // never from the beginning, and two loops never overlap.
+    const myRunId = runIdRef.current + 1;
+    runIdRef.current = myRunId;
+    if (abortRef.current) { abortRef.current.abort(); }
 
     const pending = flatUnits.filter((uid) => {
       const planned = planByUnit[uid] || [];
@@ -82,23 +103,35 @@ const ScriptsPanel = ({ courseCreationId }) => {
         return comp && comp.script && comp.script.length > 0;
       });
     });
-    if (pending.length === 0) { return; }
-
-    startedRef.current = true;
-    (async () => {
-      for (const uid of pending) {
-        setCurrentUnitId(uid);
-        try {
-          // eslint-disable-next-line no-await-in-loop
-          await genUnit.mutateAsync({ courseCreationId, unitId: uid });
-        } catch {
-          // Surface via isError; keep going so later units aren't blocked.
-        }
-      }
+    if (pending.length === 0) {
       setCurrentUnitId(null);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [flatUnits.length, planResp, courseCreationId]);
+      return;
+    }
+
+    for (const uid of pending) {
+      if (runIdRef.current !== myRunId) { return; } // a newer resume click took over
+      const controller = new AbortController();
+      abortRef.current = controller;
+      setCurrentUnitId(uid);
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await genUnit.mutateAsync({ courseCreationId, unitId: uid, signal: controller.signal });
+      } catch {
+        // Aborted, timed out (GENERATE_UNIT_TIMEOUT_MS), or errored — leave the
+        // unit pending and move on; the user can click resume to retry it.
+      }
+    }
+    if (runIdRef.current === myRunId) { setCurrentUnitId(null); }
+  }, [flatUnits, planResp, planByUnit, componentsByUnit, courseCreationId, genUnit]);
+
+  // Auto-start once, as soon as the plan + units are loaded. Subsequent runs
+  // are triggered manually via the resume button.
+  useEffect(() => {
+    if (autoStartedRef.current) { return; }
+    if (!flatUnits.length || !planResp) { return; }
+    autoStartedRef.current = true;
+    runGeneration();
+  }, [flatUnits.length, planResp, runGeneration]);
 
   const pillStatus = (unitId, typeId) => {
     const comp = (componentsByUnit[unitId] || []).find((c) => c.componentType === typeId);
@@ -143,15 +176,25 @@ const ScriptsPanel = ({ courseCreationId }) => {
           {intl.formatMessage(messages.scriptGenerationTitle)}
         </h3>
         {totalPlanned > 0 && !allReady && (
-          <Badge variant="soft" color="primary" size="md" className="ai-studio-scripts__counter">
-            <RiInformationLine size={16} />
-            <span>
-              {intl.formatMessage(messages.scriptCounter, {
-                current: done,
-                total: totalPlanned,
-              })}
-            </span>
-          </Badge>
+          <div className="ai-studio-scripts__progress">
+            <Badge variant="soft" color="primary" size="md" className="ai-studio-scripts__counter">
+              <RiInformationLine size={16} />
+              <span>
+                {intl.formatMessage(messages.scriptCounter, {
+                  current: done,
+                  total: totalPlanned,
+                })}
+              </span>
+            </Badge>
+            <IconButton
+              iconAs={RiRefreshLine}
+              alt={intl.formatMessage(messages.resumeScripts)}
+              size="sm"
+              variant="ghost-secondary"
+              onClick={runGeneration}
+              className="ai-studio-scripts__resume"
+            />
+          </div>
         )}
       </div>
       <div className="ai-studio-scripts__scroll">

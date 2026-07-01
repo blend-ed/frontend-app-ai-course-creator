@@ -150,13 +150,28 @@ export async function fetchComponents(id: string): Promise<UnitComponents[]> {
 export interface GenerateUnitParams {
   courseCreationId: string;
   unitId: string;
+  // Optional cancellation: the Scripts panel aborts a stalled unit request
+  // when the user clicks resume, so the loop can restart cleanly.
+  signal?: AbortSignal;
 }
 
+// A single unit's script generation is one LLM round-trip. Cap the wait so a
+// hung request fails fast (axios throws ECONNABORTED) instead of blocking the
+// Scripts panel's sequential loop forever — the user can then resume the
+// remaining units. The backend is idempotent (force=false), so a unit that
+// actually finished server-side after a client timeout is simply skipped on
+// the next pass.
+export const GENERATE_UNIT_TIMEOUT_MS = 150000;
+
 export async function generateUnit(params: GenerateUnitParams) {
-  const { data } = await getAuthenticatedHttpClient().post(generateUnitUrl(), {
-    course_creation_id: params.courseCreationId,
-    unit_id: params.unitId,
-  });
+  const { data } = await getAuthenticatedHttpClient().post(
+    generateUnitUrl(),
+    {
+      course_creation_id: params.courseCreationId,
+      unit_id: params.unitId,
+    },
+    { timeout: GENERATE_UNIT_TIMEOUT_MS, signal: params.signal },
+  );
   return camelCaseObject(data);
 }
 

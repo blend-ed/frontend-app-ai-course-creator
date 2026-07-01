@@ -94,6 +94,10 @@ const messages = defineMessages({
     id: 'course-authoring.ai-studio.scripts.cta',
     defaultMessage: 'Create Course',
   },
+  resumeScripts: {
+    id: 'course-authoring.ai-studio.scripts.resume',
+    defaultMessage: 'Resume script generation',
+  },
   buildOrgLabel: {
     id: 'course-authoring.ai-studio.scripts.buildOrgLabel',
     defaultMessage: 'Organization',
@@ -110,6 +114,22 @@ const messages = defineMessages({
   buildingSubtitle: {
     id: 'course-authoring.ai-studio.building.subtitle',
     defaultMessage: 'The process will take a few minutes. We\u2019ll send you an email notification when your course is ready',
+  },
+  buildingStillWorking: {
+    id: 'course-authoring.ai-studio.building.stillWorking',
+    defaultMessage: 'This is taking longer than usual\u2026',
+  },
+  buildFailedTitle: {
+    id: 'course-authoring.ai-studio.building.failedTitle',
+    defaultMessage: 'Course creation failed',
+  },
+  buildFailedFallback: {
+    id: 'course-authoring.ai-studio.building.failedFallback',
+    defaultMessage: 'Something went wrong while building your course.',
+  },
+  retryCta: {
+    id: 'course-authoring.ai-studio.retry.cta',
+    defaultMessage: 'Retry',
   },
   goToAiStudio: {
     id: 'course-authoring.ai-studio.building.back',
