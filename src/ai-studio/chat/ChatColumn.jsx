@@ -82,6 +82,18 @@ const ChatColumn = ({ courseCreationId, latestOptions, composerRef }) => {
     handleSend({ message: values, files: [] });
   };
 
+  const optionsActive = latestOptions && !isPending;
+  const choiceIds = (latestOptions?.choices || []).map((c) => String(c.id));
+  // Closed-choice questionnaires the user answers purely by tapping: the
+  // multi-select content/assessment cards, and the single-select theme/style
+  // card (choices `default` / `modern`). For these the free-text composer is
+  // redundant, so hide it. Other single-select cards keep the composer, since
+  // some offer a "specify other" free-text path and sizing accepts typed counts.
+  const isMultiCard = latestOptions?.type === 'multi' && choiceIds.length > 0;
+  const isStyleCard = choiceIds.length > 0
+    && choiceIds.every((id) => id === 'default' || id === 'modern');
+  const hideComposer = Boolean(optionsActive && (isMultiCard || isStyleCard));
+
   return (
     <div className="ai-studio-chat">
       <div ref={scrollRef} className="ai-studio-chat__log">
@@ -123,18 +135,20 @@ const ChatColumn = ({ courseCreationId, latestOptions, composerRef }) => {
         </div>
       </div>
       <div className="ai-studio-chat__dock">
-        {latestOptions && !isPending && (
+        {optionsActive && (
           <OptionsCard
             options={latestOptions}
             onSelect={handleOptionSelect}
             onSpecifyOther={() => composerRef?.current?.focus()}
           />
         )}
-        <Composer
-          ref={composerRef}
-          onSend={handleSend}
-          disabled={isPending}
-        />
+        {!hideComposer && (
+          <Composer
+            ref={composerRef}
+            onSend={handleSend}
+            disabled={isPending}
+          />
+        )}
       </div>
     </div>
   );
