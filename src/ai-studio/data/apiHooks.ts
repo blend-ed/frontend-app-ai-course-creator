@@ -14,6 +14,15 @@ export const useAllowedOrgs = () => useQuery({
   staleTime: Infinity,
 });
 
+/** Delete a course-creation thread and refresh the history list. */
+export const useDeleteCourseCreation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.deleteCourseCreation(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...aiStudioKeys.all, 'creations'] }),
+  });
+};
+
 export const useMessages = (id?: string) => useQuery({
   queryKey: aiStudioKeys.messages(id || ''),
   queryFn: () => api.fetchMessages(id as string),
@@ -178,6 +187,17 @@ export const useAddStructureNode = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: api.addStructureNode,
+    onSuccess: (_d, vars) => {
+      qc.invalidateQueries({ queryKey: aiStudioKeys.structure(vars.courseCreationId) });
+    },
+  });
+};
+
+/** Reorder sibling structure nodes; refreshes the outline. */
+export const useReorderNodes = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (p: { nodeIds: string[]; courseCreationId: string }) => api.reorderNodes(p.nodeIds),
     onSuccess: (_d, vars) => {
       qc.invalidateQueries({ queryKey: aiStudioKeys.structure(vars.courseCreationId) });
     },

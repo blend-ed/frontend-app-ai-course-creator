@@ -147,6 +147,18 @@ const messages = defineMessages({
     id: 'course-authoring.ai-studio.history.title',
     defaultMessage: 'Your creation history',
   },
+  historyDeleteThread: {
+    id: 'course-authoring.ai-studio.history.deleteThread',
+    defaultMessage: 'Delete',
+  },
+  historyDeleteConfirmTitle: {
+    id: 'course-authoring.ai-studio.history.deleteConfirmTitle',
+    defaultMessage: 'Delete this course draft?',
+  },
+  historyDeleteConfirmBody: {
+    id: 'course-authoring.ai-studio.history.deleteConfirmBody',
+    defaultMessage: 'This removes “{title}” and its chat, outline and scripts. Any course already built from it is not affected. This cannot be undone.',
+  },
   historyNewCourse: {
     id: 'course-authoring.ai-studio.history.newCourse',
     defaultMessage: 'New course',
@@ -445,6 +457,14 @@ const messages = defineMessages({
   deleteSection: {
     id: 'course-authoring.ai-studio.outline.deleteSection',
     defaultMessage: 'Delete section',
+  },
+  moveUp: {
+    id: 'course-authoring.ai-studio.outline.moveUp',
+    defaultMessage: 'Move up',
+  },
+  moveDown: {
+    id: 'course-authoring.ai-studio.outline.moveDown',
+    defaultMessage: 'Move down',
   },
   removeComponent: {
     id: 'course-authoring.ai-studio.outline.removeComponent',

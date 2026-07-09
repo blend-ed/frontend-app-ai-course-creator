@@ -2,8 +2,12 @@ import { getConfig } from '@edx/frontend-platform';
 import {
   aiStudioBaseUrl,
   chatUrl,
+  chatDetailUrl,
   chatMessagesUrl,
   chatStructureUrl,
+  structureReorderUrl,
+  deleteCourseCreation,
+  reorderNodes,
   componentPlanGenerateUrl,
   componentPlanUrl,
   buildUrl,
@@ -55,6 +59,32 @@ describe('ai-studio api urls', () => {
   it('builds messages URL with id', () => {
     expect(chatMessagesUrl('abc-123'))
       .toBe('https://studio.test/ai_course_creator/chat/abc-123/messages/');
+  });
+
+  it('builds chat detail URL with id', () => {
+    expect(chatDetailUrl('abc-123'))
+      .toBe('https://studio.test/ai_course_creator/chat/abc-123/');
+  });
+
+  it('builds structure reorder URL', () => {
+    expect(structureReorderUrl())
+      .toBe('https://studio.test/ai_course_creator/scripts/structure/reorder/');
+  });
+
+  it('deleteCourseCreation DELETEs the detail URL', async () => {
+    mockHttpClient.delete.mockResolvedValue({});
+    await deleteCourseCreation('abc-123');
+    expect(mockHttpClient.delete)
+      .toHaveBeenCalledWith('https://studio.test/ai_course_creator/chat/abc-123/');
+  });
+
+  it('reorderNodes POSTs the ordered ids', async () => {
+    mockHttpClient.post.mockResolvedValue({ data: { status: 'success' } });
+    await reorderNodes(['n1', 'n2', 'n3']);
+    expect(mockHttpClient.post).toHaveBeenCalledWith(
+      'https://studio.test/ai_course_creator/scripts/structure/reorder/',
+      { node_ids: ['n1', 'n2', 'n3'] },
+    );
   });
 
   it('builds structure URL with id', () => {
@@ -121,11 +151,11 @@ describe('ai-studio refine + prompt requests', () => {
     );
   });
 
-  it('fetchPromptOverrides GETs the list URL', async () => {
+  it('fetchPromptOverrides GETs the list URL scoped to the org', async () => {
     mockHttpClient.get.mockResolvedValue({ data: [] });
-    await fetchPromptOverrides();
+    await fetchPromptOverrides('');
     expect(mockHttpClient.get).toHaveBeenCalledWith(
-      'https://studio.test/ai_course_creator/prompts/overrides/',
+      'https://studio.test/ai_course_creator/prompts/overrides/?organisation_id=',
     );
   });
 

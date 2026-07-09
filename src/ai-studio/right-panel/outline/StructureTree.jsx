@@ -5,6 +5,7 @@ import { RiDeleteBinLine } from '@remixicon/react';
 import InlineRename from './InlineRename';
 import UnitRow from './UnitRow';
 import AddStructureMenu from './AddStructureMenu';
+import MoveControls from './MoveControls';
 import messages from '../../messages';
 import {
   useRenameNode,
@@ -15,11 +16,14 @@ import {
 // Subsection wraps its units inside `.ai-studio-outline__units-wrapper` so
 // the vertical divider + L-shape connectors can be drawn with CSS pseudo-
 // elements anchored to that wrapper (see OutlinePanel.scss).
-const Subsection = ({ node, courseCreationId, planByUnit }) => {
+const Subsection = ({
+  node, courseCreationId, planByUnit, siblingIds, index,
+}) => {
   const intl = useIntl();
   const rename = useRenameNode();
   const del = useDeleteNode();
   const add = useAddStructureNode();
+  const unitIds = (node.children || []).map((u) => u.id);
 
   return (
     <div className="ai-studio-outline__subsection">
@@ -30,6 +34,7 @@ const Subsection = ({ node, courseCreationId, planByUnit }) => {
           value={node.name}
           onSave={(v) => rename.mutate({ nodeId: node.id, name: v, courseCreationId })}
         />
+        <MoveControls siblingIds={siblingIds} index={index} courseCreationId={courseCreationId} />
         <IconButton
           iconAs={RiDeleteBinLine}
           alt={intl.formatMessage(messages.deleteSubsection)}
@@ -39,13 +44,15 @@ const Subsection = ({ node, courseCreationId, planByUnit }) => {
         />
       </div>
       <div className="ai-studio-outline__units-wrapper">
-        {(node.children || []).map((unit) => (
+        {(node.children || []).map((unit, i) => (
           <UnitRow
             key={unit.id}
             courseCreationId={courseCreationId}
             unitId={unit.id}
             name={unit.name}
             componentTypes={planByUnit[unit.id] || []}
+            siblingIds={unitIds}
+            index={i}
           />
         ))}
         <div className="ai-studio-outline__unit-add">
@@ -64,11 +71,14 @@ const Subsection = ({ node, courseCreationId, planByUnit }) => {
   );
 };
 
-const Section = ({ node, courseCreationId, planByUnit }) => {
+const Section = ({
+  node, courseCreationId, planByUnit, siblingIds, index,
+}) => {
   const intl = useIntl();
   const rename = useRenameNode();
   const del = useDeleteNode();
   const add = useAddStructureNode();
+  const subIds = (node.children || []).map((s) => s.id);
 
   return (
     <section className="ai-studio-outline__section">
@@ -79,6 +89,7 @@ const Section = ({ node, courseCreationId, planByUnit }) => {
           value={node.name}
           onSave={(v) => rename.mutate({ nodeId: node.id, name: v, courseCreationId })}
         />
+        <MoveControls siblingIds={siblingIds} index={index} courseCreationId={courseCreationId} />
         <IconButton
           iconAs={RiDeleteBinLine}
           alt={intl.formatMessage(messages.deleteSection)}
@@ -88,12 +99,14 @@ const Section = ({ node, courseCreationId, planByUnit }) => {
         />
       </div>
       <div className="ai-studio-outline__subsections-wrapper">
-        {(node.children || []).map((sub) => (
+        {(node.children || []).map((sub, i) => (
           <Subsection
             key={sub.id}
             node={sub}
             courseCreationId={courseCreationId}
             planByUnit={planByUnit}
+            siblingIds={subIds}
+            index={i}
           />
         ))}
         <div className="ai-studio-outline__subsection-add">
@@ -118,14 +131,17 @@ const StructureTree = ({
   planByUnit = {},
 }) => {
   const add = useAddStructureNode();
+  const sectionIds = structure.map((s) => s.id);
   return (
     <div className="ai-studio-outline__tree">
-      {structure.map((section) => (
+      {structure.map((section, i) => (
         <Section
           key={section.id}
           node={section}
           courseCreationId={courseCreationId}
           planByUnit={planByUnit}
+          siblingIds={sectionIds}
+          index={i}
         />
       ))}
       <div className="ai-studio-outline__section-add">

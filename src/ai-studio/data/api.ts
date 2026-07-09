@@ -17,6 +17,7 @@ import type {
 export const aiStudioBaseUrl = () => `${getConfig().STUDIO_BASE_URL}/ai_course_creator`;
 
 export const chatUrl = () => `${aiStudioBaseUrl()}/chat/`;
+export const chatDetailUrl = (id: string) => `${aiStudioBaseUrl()}/chat/${id}/`;
 export const chatMessagesUrl = (id: string) => `${aiStudioBaseUrl()}/chat/${id}/messages/`;
 export const chatMetadataUrl = (id: string) => `${aiStudioBaseUrl()}/chat/${id}/metadata/`;
 export const chatStructureUrl = (id: string) => `${aiStudioBaseUrl()}/chat/${id}/structure/`;
@@ -31,6 +32,7 @@ export const componentUpdateUrl = (componentId: string) => `${aiStudioBaseUrl()}
 
 export const structureNodeUrl = (nodeId: string) => `${aiStudioBaseUrl()}/scripts/structure/node/${nodeId}/`;
 export const structureAddUrl = () => `${aiStudioBaseUrl()}/scripts/structure/add/`;
+export const structureReorderUrl = () => `${aiStudioBaseUrl()}/scripts/structure/reorder/`;
 
 export const buildUrl = () => `${aiStudioBaseUrl()}/build/`;
 export const buildProgressUrl = (id: string) => `${aiStudioBaseUrl()}/build/progress/${id}/`;
@@ -62,6 +64,14 @@ export async function fetchCourseCreations(organisationId?: string): Promise<Cou
     : chatUrl();
   const { data } = await getAuthenticatedHttpClient().get(url);
   return camelCaseObject(data) as CourseCreationSummary[];
+}
+
+// Delete a course-creation thread and everything hanging off it (messages,
+// metadata, structure, components, video jobs). A course already built from
+// the thread survives — the built course is referenced by a plain key, not an
+// FK, so there is no cascade into the modulestore.
+export async function deleteCourseCreation(id: string): Promise<void> {
+  await getAuthenticatedHttpClient().delete(chatDetailUrl(id));
 }
 
 export interface AllowedOrgs {
@@ -204,6 +214,13 @@ export async function addStructureNode(params: AddStructureNodeParams) {
     hierarchy: params.hierarchy,
     name: params.name,
   });
+  return camelCaseObject(data);
+}
+
+// Reorder sibling nodes. `nodeIds` must all share the same parent and be in
+// the desired order — the backend writes each node's `order` to its index.
+export async function reorderNodes(nodeIds: string[]) {
+  const { data } = await getAuthenticatedHttpClient().post(structureReorderUrl(), { node_ids: nodeIds });
   return camelCaseObject(data);
 }
 

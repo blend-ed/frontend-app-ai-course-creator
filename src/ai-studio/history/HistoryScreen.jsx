@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
-  Badge, Button, SearchField, Spinner,
+  ActionRow, Badge, Button, IconButton, ModalDialog, SearchField, Spinner,
 } from '@openedx/paragon';
 import {
-  RiAddLine, RiCheckboxCircleFill, RiLoader4Line,
+  RiAddLine, RiCheckboxCircleFill, RiDeleteBinLine, RiLoader4Line,
 } from '@remixicon/react';
 import { format as formatDate, parseISO, isToday } from 'date-fns';
 
 import messages from '../messages';
-import { useCourseCreations } from '../data/apiHooks';
+import { useCourseCreations, useDeleteCourseCreation } from '../data/apiHooks';
 import { STAGES } from '../data/constants';
 import HoverCard from './HoverCard';
 import './HistoryScreen.scss';
@@ -71,7 +71,15 @@ const HistoryScreen = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const { data: items = [], isLoading } = useCourseCreations();
+  const del = useDeleteCourseCreation();
   const [query, setQuery] = useState('');
+  const [pendingDelete, setPendingDelete] = useState(null);
+
+  const closeConfirm = () => { if (!del.isPending) { setPendingDelete(null); } };
+  const confirmDelete = () => {
+    if (!pendingDelete) { return; }
+    del.mutate(pendingDelete.id, { onSuccess: () => setPendingDelete(null) });
+  };
 
   const { todayItems, olderItems } = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -144,8 +152,22 @@ const HistoryScreen = () => {
       </button>
     );
 
+    const rowNode = (
+      <div className="ai-studio-history__row-wrap">
+        {button}
+        <IconButton
+          iconAs={RiDeleteBinLine}
+          alt={intl.formatMessage(messages.historyDeleteThread)}
+          size="sm"
+          variant="ghost-secondary"
+          className="ai-studio-history__row-delete"
+          onClick={(e) => { e.stopPropagation(); setPendingDelete(item); }}
+        />
+      </div>
+    );
+
     if (!inProgress) {
-      return <React.Fragment key={item.id}>{button}</React.Fragment>;
+      return <React.Fragment key={item.id}>{rowNode}</React.Fragment>;
     }
 
     const card = (
@@ -188,7 +210,7 @@ const HistoryScreen = () => {
 
     return (
       <HoverCard key={item.id} card={card}>
-        {button}
+        {rowNode}
       </HoverCard>
     );
   };
@@ -262,6 +284,37 @@ const HistoryScreen = () => {
           </div>
         )}
       </div>
+
+      <ModalDialog
+        title={intl.formatMessage(messages.historyDeleteConfirmTitle)}
+        isOpen={!!pendingDelete}
+        onClose={closeConfirm}
+        hasCloseButton={false}
+        isBlocking
+      >
+        <ModalDialog.Header>
+          <ModalDialog.Title>
+            {intl.formatMessage(messages.historyDeleteConfirmTitle)}
+          </ModalDialog.Title>
+        </ModalDialog.Header>
+        <ModalDialog.Body>
+          {intl.formatMessage(messages.historyDeleteConfirmBody, {
+            title: pendingDelete?.title || intl.formatMessage(messages.historyUntitled),
+          })}
+        </ModalDialog.Body>
+        <ModalDialog.Footer>
+          <ActionRow>
+            <Button variant="tertiary" onClick={closeConfirm} disabled={del.isPending}>
+              {intl.formatMessage(messages.actionCancel)}
+            </Button>
+            <Button variant="danger" onClick={confirmDelete} disabled={del.isPending}>
+              {del.isPending
+                ? <Spinner animation="border" size="sm" screenReaderText={intl.formatMessage(messages.historyDeleteThread)} />
+                : intl.formatMessage(messages.historyDeleteThread)}
+            </Button>
+          </ActionRow>
+        </ModalDialog.Footer>
+      </ModalDialog>
     </div>
   );
 };

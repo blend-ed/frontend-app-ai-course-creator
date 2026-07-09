@@ -5,6 +5,7 @@ import { RiDeleteBinLine } from '@remixicon/react';
 import ComponentChip from './ComponentChip';
 import AddComponentMenu from './AddComponentMenu';
 import InlineRename from './InlineRename';
+import MoveControls from './MoveControls';
 import messages from '../../messages';
 import {
   useRenameNode,
@@ -17,6 +18,8 @@ const UnitRow = ({
   unitId,
   name,
   componentTypes = [],
+  siblingIds = [],
+  index = 0,
 }) => {
   const intl = useIntl();
   const rename = useRenameNode();
@@ -36,6 +39,7 @@ const UnitRow = ({
           value={name}
           onSave={(v) => rename.mutate({ nodeId: unitId, name: v, courseCreationId })}
         />
+        <MoveControls siblingIds={siblingIds} index={index} courseCreationId={courseCreationId} />
         <IconButton
           iconAs={RiDeleteBinLine}
           alt={intl.formatMessage(messages.deleteUnit)}
