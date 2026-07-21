@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
+import { AppContext } from '@edx/frontend-platform/react';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Link } from 'react-router-dom';
 import {
@@ -20,6 +21,10 @@ const LandingScreen = ({
   onSubmit, isSubmitting, error, reply, onHistoryClick,
 }) => {
   const intl = useIntl();
+  // Prompt settings are staff-only (see PromptsAdminPage) — don't advertise the
+  // link to users who would only be turned away.
+  const { authenticatedUser } = useContext(AppContext);
+  const isStaff = !!authenticatedUser?.administrator;
   const [message, setMessage] = useState('');
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
@@ -133,14 +138,26 @@ const LandingScreen = ({
             >
               {intl.formatMessage(messages.creationHistory)}
             </Button>
-            <Button
-              as={Link}
-              to="/ai-studio/prompts"
-              variant="ghost-secondary"
-              size="sm"
-            >
-              {intl.formatMessage(messages.promptsTitle)}
-            </Button>
+            {isStaff && (
+              <>
+                <Button
+                  as={Link}
+                  to="/ai-studio/prompts"
+                  variant="ghost-secondary"
+                  size="sm"
+                >
+                  {intl.formatMessage(messages.promptsTitle)}
+                </Button>
+                <Button
+                  as={Link}
+                  to="/ai-studio/audit"
+                  variant="ghost-secondary"
+                  size="sm"
+                >
+                  {intl.formatMessage(messages.auditTitle)}
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -140,3 +140,101 @@ export interface PromptAddendumInput {
   body: string;
   isActive: boolean;
 }
+
+// --- Audit (staff-only) ---------------------------------------------------
+// Reconstructed from the course-creation tables by the plugin's /audit/ API;
+// there is no audit-event store, so everything here is derived state.
+
+export interface AuditRunSummary {
+  id: string;
+  title: string;
+  organisationId: string;
+  userId: number | null;
+  username: string;
+  email: string;
+  stage: Stage;
+  errorMessage: string;
+  courseKey: string;
+  buildTaskId: string;
+  buildProgressCurrent: number;
+  buildProgressTotal: number;
+  buildProgressDetail: string;
+  attachedFileCount: number;
+  messageCount: number;
+  componentCount: number;
+  unitCount: number;
+  durationSeconds: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuditOutlineNode {
+  id: string;
+  parentId: string | null;
+  hierarchy: 'section' | 'subsection' | 'unit';
+  name: string;
+  order: number;
+}
+
+export interface AuditComponent {
+  id: string;
+  componentType: string;
+  unitId: string;
+  unitName: string;
+  unitOrder: number;
+  script: string;
+  wasEdited: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuditVideoJob {
+  id: string;
+  componentId: string;
+  provider: string;
+  providerJobId: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  videoUrl: string;
+  durationSeconds: number | null;
+  errorMessage: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuditRunDetail extends AuditRunSummary {
+  attachedFiles: AttachedFile[];
+  metadata: Record<string, unknown>;
+  outline: {
+    counts: { section: number; subsection: number; unit: number };
+    nodes: AuditOutlineNode[];
+  };
+  messages: CourseCreationMessage[];
+  components: AuditComponent[];
+  videoJobs: AuditVideoJob[];
+}
+
+export interface AuditRunPage {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: AuditRunSummary[];
+}
+
+export interface AuditSummary {
+  total: number;
+  byStage: Partial<Record<Stage, number>>;
+  succeeded: number;
+  failed: number;
+  /** Share of *finished* runs that succeeded; null when nothing has finished. */
+  successRate: number | null;
+  organisations: string[];
+}
+
+export interface AuditRunFilters {
+  organisationId?: string;
+  stage?: string;
+  search?: string;
+  failedOnly?: boolean;
+  page?: number;
+  pageSize?: number;
+}

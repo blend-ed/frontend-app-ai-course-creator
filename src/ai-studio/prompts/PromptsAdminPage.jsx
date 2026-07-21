@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { AppContext } from '@edx/frontend-platform/react';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -7,7 +8,7 @@ import {
 import { RiArrowLeftLine, RiBuildingLine } from '@remixicon/react';
 
 import messages from '../messages';
-import { PROMPT_KEY_FIELDS } from '../data/constants';
+import { PROMPT_KEY_FIELDS, editablePromptKeys } from '../data/constants';
 import {
   useAllowedOrgs,
   usePromptOverrides,
@@ -23,7 +24,36 @@ import './PromptsAdminPage.scss';
 
 const isForbidden = (query) => query.isError && query.error?.response?.status === 403;
 
-const PromptsAdminPage = () => {
+const BackToStudio = () => {
+  const intl = useIntl();
+  const navigate = useNavigate();
+  return (
+    <Button
+      variant="tertiary"
+      size="sm"
+      className="ai-studio-prompts__back mb-3"
+      iconBefore={RiArrowLeftLine}
+      onClick={() => navigate('/ai-studio')}
+    >
+      {intl.formatMessage(messages.promptsBack)}
+    </Button>
+  );
+};
+
+/** Shown instead of the editor to non-staff users. */
+const PromptsAccessDenied = () => {
+  const intl = useIntl();
+  return (
+    <div className="ai-studio-prompts">
+      <Container size="lg" className="ai-studio-prompts__container py-4">
+        <BackToStudio />
+        <Alert variant="warning">{intl.formatMessage(messages.promptsStaffOnly)}</Alert>
+      </Container>
+    </div>
+  );
+};
+
+const PromptsAdminPageContent = () => {
   const intl = useIntl();
   const navigate = useNavigate();
 
@@ -35,6 +65,9 @@ const PromptsAdminPage = () => {
   useEffect(() => {
     if (!org && allowedOrgs.length) { setOrg(allowedOrgs[0]); }
   }, [allowedOrgs, org]);
+
+  // Read once per mount — config is fixed for the life of the app.
+  const editableKeys = useMemo(() => editablePromptKeys(), []);
 
   const overridesQuery = usePromptOverrides(org);
   const addendaQuery = usePromptAddenda(org);
@@ -81,15 +114,7 @@ const PromptsAdminPage = () => {
   return (
     <div className="ai-studio-prompts">
       <Container size="lg" className="ai-studio-prompts__container py-4">
-        <Button
-          variant="tertiary"
-          size="sm"
-          className="ai-studio-prompts__back mb-3"
-          iconBefore={RiArrowLeftLine}
-          onClick={() => navigate('/ai-studio')}
-        >
-          {intl.formatMessage(messages.promptsBack)}
-        </Button>
+        <BackToStudio />
 
         <header className="ai-studio-prompts__header">
           <h1 className="ai-studio-prompts__title">{intl.formatMessage(messages.promptsHeading)}</h1>
@@ -142,6 +167,8 @@ const PromptsAdminPage = () => {
                         key={`${k.id}-${org}`}
                         title={intl.formatMessage(k.label)}
                         help={intl.formatMessage(k.help)}
+                        readOnly={!editableKeys.includes(k.id)}
+                        structured={k.structured}
                         row={overrideByKey[k.id] || null}
                         defaultBody={defaults[k.id] || ''}
                         placeholder={intl.formatMessage(messages.promptsBodyPlaceholder)}
@@ -175,6 +202,21 @@ const PromptsAdminPage = () => {
       </Container>
     </div>
   );
+};
+
+/**
+ * Prompt settings are staff-only: an override applies to every course generated
+ * under the scope. The `administrator` JWT claim mirrors Django's `is_staff`
+ * (superusers are staff too), which is exactly what the backend's `IsAdminUser`
+ * permission checks — this gate keeps non-staff out of a page that would only
+ * 403, it is not the security boundary.
+ */
+const PromptsAdminPage = () => {
+  const { authenticatedUser } = useContext(AppContext);
+  if (!authenticatedUser?.administrator) {
+    return <PromptsAccessDenied />;
+  }
+  return <PromptsAdminPageContent />;
 };
 
 export default PromptsAdminPage;

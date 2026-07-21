@@ -12,6 +12,10 @@ import type {
   PromptOverrideInput,
   PromptAddendum,
   PromptAddendumInput,
+  AuditRunFilters,
+  AuditRunPage,
+  AuditRunDetail,
+  AuditSummary,
 } from './types';
 
 export const aiStudioBaseUrl = () => `${getConfig().STUDIO_BASE_URL}/ai_course_creator`;
@@ -359,4 +363,51 @@ export async function savePromptAddendum(p: PromptAddendumInput): Promise<Prompt
 
 export async function deletePromptAddendum(pk: string): Promise<void> {
   await getAuthenticatedHttpClient().delete(promptAddendumUrl(pk));
+}
+
+// --- Audit (staff-only) ---------------------------------------------------
+
+export const auditRunsUrl = () => `${aiStudioBaseUrl()}/audit/runs/`;
+export const auditRunUrl = (id: string) => `${aiStudioBaseUrl()}/audit/runs/${id}/`;
+export const auditSummaryUrl = () => `${aiStudioBaseUrl()}/audit/summary/`;
+
+/**
+ * One page of course-creation runs across every user and organisation.
+ *
+ * Server-side paged and filtered — the run table grows without bound, so the
+ * client never holds the full set.
+ */
+export async function fetchAuditRuns(filters: AuditRunFilters = {}): Promise<AuditRunPage> {
+  const params = new URLSearchParams();
+  if (filters.organisationId) { params.set('organisation_id', filters.organisationId); }
+  if (filters.stage) { params.set('stage', filters.stage); }
+  if (filters.search) { params.set('search', filters.search); }
+  if (filters.failedOnly) { params.set('failed_only', 'true'); }
+  if (filters.page) { params.set('page', String(filters.page)); }
+  if (filters.pageSize) { params.set('page_size', String(filters.pageSize)); }
+
+  const query = params.toString();
+  const { data } = await getAuthenticatedHttpClient().get(
+    query ? `${auditRunsUrl()}?${query}` : auditRunsUrl(),
+  );
+  return camelCaseObject(data) as AuditRunPage;
+}
+
+export async function fetchAuditRun(id: string): Promise<AuditRunDetail> {
+  const { data } = await getAuthenticatedHttpClient().get(auditRunUrl(id));
+  // `metadata` holds backend-authored keys (topic_summary, component_types, …)
+  // that the brief panel matches on verbatim, so it must survive camelCasing.
+  const detail = camelCaseObject(data) as AuditRunDetail;
+  return { ...detail, metadata: (data as { metadata?: Record<string, unknown> }).metadata || {} };
+}
+
+export async function fetchAuditSummary(organisationId?: string): Promise<AuditSummary> {
+  const url = organisationId
+    ? `${auditSummaryUrl()}?organisation_id=${encodeURIComponent(organisationId)}`
+    : auditSummaryUrl();
+  const { data } = await getAuthenticatedHttpClient().get(url);
+  // by_stage keys are stage slugs (`metadata_collection`), not field names —
+  // camelCasing them would break the lookup against STAGES.
+  const summary = camelCaseObject(data) as AuditSummary;
+  return { ...summary, byStage: (data as { by_stage?: AuditSummary['byStage'] }).by_stage || {} };
 }

@@ -11,4 +11,7 @@ export const aiStudioKeys = {
   promptOverrides: (organisationId: string) => [...aiStudioKeys.all, 'prompt-overrides', organisationId] as const,
   promptAddenda: (organisationId: string) => [...aiStudioKeys.all, 'prompt-addenda', organisationId] as const,
   promptDefaults: () => [...aiStudioKeys.all, 'prompt-defaults'] as const,
+  auditRuns: (filters: Record<string, unknown>) => [...aiStudioKeys.all, 'audit-runs', filters] as const,
+  auditRun: (id: string) => [...aiStudioKeys.all, 'audit-run', id] as const,
+  auditSummary: (organisationId: string) => [...aiStudioKeys.all, 'audit-summary', organisationId] as const,
 };

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { aiStudioKeys } from './queryKeys';
 import * as api from './api';
+import type { AuditRunFilters } from './types';
 
 export const useCourseCreations = (organisationId?: string) => useQuery({
   queryKey: aiStudioKeys.creations(organisationId),
@@ -294,3 +295,28 @@ export const useDeletePromptAddendum = () => {
     onSuccess: () => qc.invalidateQueries({ queryKey: [...aiStudioKeys.all, 'prompt-addenda'] }),
   });
 };
+
+// --- Audit (staff-only) ---------------------------------------------------
+
+/**
+ * One page of course-creation runs across every user and organisation.
+ *
+ * `keepPreviousData` holds the current page on screen while the next one loads,
+ * so paging and filtering don't blank the table.
+ */
+export const useAuditRuns = (filters: AuditRunFilters) => useQuery({
+  queryKey: aiStudioKeys.auditRuns(filters as Record<string, unknown>),
+  queryFn: () => api.fetchAuditRuns(filters),
+  placeholderData: (previous) => previous,
+});
+
+export const useAuditRun = (id?: string) => useQuery({
+  queryKey: aiStudioKeys.auditRun(id || ''),
+  queryFn: () => api.fetchAuditRun(id as string),
+  enabled: !!id,
+});
+
+export const useAuditSummary = (organisationId = '') => useQuery({
+  queryKey: aiStudioKeys.auditSummary(organisationId),
+  queryFn: () => api.fetchAuditSummary(organisationId),
+});

@@ -53,6 +53,12 @@
     font-size: .8125rem;
   }
 
+  // Reference-only prompts: readable, but visibly not an input.
+  &__card--locked &__textarea {
+    background-color: var(--pgn-color-light-300);
+    color: var(--pgn-color-text-subtle);
+  }
+
   &__feedback {
     font-size: .75rem;
 

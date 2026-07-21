@@ -591,7 +591,23 @@ const messages = defineMessages({
   },
   promptsOverridesHint: {
     id: 'course-authoring.ai-studio.prompts.overrides.hint',
-    defaultMessage: 'Replace a built-in prompt template. Reference dynamic values with $placeholders (e.g. $course_title).',
+    defaultMessage: 'Replace a built-in prompt template. Reference dynamic values with $placeholders (e.g. $course_title). Prompts whose output the course builder parses are shown read-only — use the additional instructions below to steer those.',
+  },
+  promptsStaffOnly: {
+    id: 'course-authoring.ai-studio.prompts.staffOnly',
+    defaultMessage: 'Prompt settings can only be viewed and edited by staff and superusers.',
+  },
+  promptsLockedBadge: {
+    id: 'course-authoring.ai-studio.prompts.locked.badge',
+    defaultMessage: 'Read-only',
+  },
+  promptsLockedHint: {
+    id: 'course-authoring.ai-studio.prompts.locked.hint',
+    defaultMessage: 'Editing this prompt is disabled on this site. Shown for reference only — add guidance under additional instructions instead.',
+  },
+  promptsLockedHintStructured: {
+    id: 'course-authoring.ai-studio.prompts.locked.hintStructured',
+    defaultMessage: 'The course builder parses this prompt\'s response in a fixed format, so replacing it would break course generation. Shown for reference only — add guidance under additional instructions instead.',
   },
   promptsAddendumHeading: {
     id: 'course-authoring.ai-studio.prompts.addendum.heading',
@@ -681,6 +697,208 @@ const messages = defineMessages({
   promptKeyOlxGenerationHelp: {
     id: 'course-authoring.ai-studio.prompts.key.olxGeneration.help',
     defaultMessage: 'Converts a content script into the OLX a component is built from.',
+  },
+
+  // Audit (staff only)
+  auditTitle: {
+    id: 'course-authoring.ai-studio.audit.title',
+    defaultMessage: 'Audit log',
+  },
+  auditHeading: {
+    id: 'course-authoring.ai-studio.audit.heading',
+    defaultMessage: 'Course creation audit log',
+  },
+  auditSubtitle: {
+    id: 'course-authoring.ai-studio.audit.subtitle',
+    defaultMessage: 'Every course creation run across all users and organisations, with the full record of what was asked and what was generated.',
+  },
+  auditBack: {
+    id: 'course-authoring.ai-studio.audit.back',
+    defaultMessage: 'Back to AI Studio',
+  },
+  auditBackToList: {
+    id: 'course-authoring.ai-studio.audit.backToList',
+    defaultMessage: 'Back to audit log',
+  },
+  auditStaffOnly: {
+    id: 'course-authoring.ai-studio.audit.staffOnly',
+    defaultMessage: 'The audit log can only be viewed by staff and superusers.',
+  },
+  auditLoadError: {
+    id: 'course-authoring.ai-studio.audit.loadError',
+    defaultMessage: 'Could not load the audit log. Refresh to try again.',
+  },
+  auditRunMissing: {
+    id: 'course-authoring.ai-studio.audit.runMissing',
+    defaultMessage: 'This run no longer exists. Deleted runs are removed entirely and leave no record.',
+  },
+  auditEmpty: {
+    id: 'course-authoring.ai-studio.audit.empty',
+    defaultMessage: 'No runs match these filters. Widen the search or clear a filter.',
+  },
+  auditStatTotal: {
+    id: 'course-authoring.ai-studio.audit.stat.total',
+    defaultMessage: 'Runs',
+  },
+  auditStatSucceeded: {
+    id: 'course-authoring.ai-studio.audit.stat.succeeded',
+    defaultMessage: 'Built',
+  },
+  auditStatFailed: {
+    id: 'course-authoring.ai-studio.audit.stat.failed',
+    defaultMessage: 'Failed',
+  },
+  auditStatSuccessRate: {
+    id: 'course-authoring.ai-studio.audit.stat.successRate',
+    defaultMessage: 'Success rate',
+  },
+  auditSuccessRateNote: {
+    id: 'course-authoring.ai-studio.audit.successRateNote',
+    defaultMessage: 'Success rate counts finished runs only; runs still in progress are excluded.',
+  },
+  auditSearchPlaceholder: {
+    id: 'course-authoring.ai-studio.audit.searchPlaceholder',
+    defaultMessage: 'Search by title, user or course key',
+  },
+  auditFilterOrg: {
+    id: 'course-authoring.ai-studio.audit.filter.org',
+    defaultMessage: 'Organisation',
+  },
+  auditFilterAllOrgs: {
+    id: 'course-authoring.ai-studio.audit.filter.allOrgs',
+    defaultMessage: 'All organisations',
+  },
+  auditFilterStage: {
+    id: 'course-authoring.ai-studio.audit.filter.stage',
+    defaultMessage: 'Stage',
+  },
+  auditFilterAllStages: {
+    id: 'course-authoring.ai-studio.audit.filter.allStages',
+    defaultMessage: 'All stages',
+  },
+  auditColRun: {
+    id: 'course-authoring.ai-studio.audit.col.run',
+    defaultMessage: 'Run',
+  },
+  auditColOwner: {
+    id: 'course-authoring.ai-studio.audit.col.owner',
+    defaultMessage: 'Created by',
+  },
+  auditColOrg: {
+    id: 'course-authoring.ai-studio.audit.col.org',
+    defaultMessage: 'Organisation',
+  },
+  auditColStage: {
+    id: 'course-authoring.ai-studio.audit.col.stage',
+    defaultMessage: 'Stage',
+  },
+  auditColActivity: {
+    id: 'course-authoring.ai-studio.audit.col.activity',
+    defaultMessage: 'Activity',
+  },
+  auditColDuration: {
+    id: 'course-authoring.ai-studio.audit.col.duration',
+    defaultMessage: 'Duration',
+  },
+  auditColUpdated: {
+    id: 'course-authoring.ai-studio.audit.col.updated',
+    defaultMessage: 'Last activity',
+  },
+  auditActivityCounts: {
+    id: 'course-authoring.ai-studio.audit.activityCounts',
+    defaultMessage: '{messages} msg · {units} units · {components} components',
+  },
+  auditRunCount: {
+    id: 'course-authoring.ai-studio.audit.runCount',
+    defaultMessage: '{count} runs',
+  },
+  auditPaginationLabel: {
+    id: 'course-authoring.ai-studio.audit.paginationLabel',
+    defaultMessage: 'Audit log pages',
+  },
+  auditRunByline: {
+    id: 'course-authoring.ai-studio.audit.runByline',
+    defaultMessage: 'Created by {username} in {org} on {created}',
+  },
+  auditFailureHeading: {
+    id: 'course-authoring.ai-studio.audit.failureHeading',
+    defaultMessage: 'This run failed',
+  },
+  auditFailedAt: {
+    id: 'course-authoring.ai-studio.audit.failedAt',
+    defaultMessage: 'Stopped at: {detail} ({current} of {total})',
+  },
+  auditFactUpdated: {
+    id: 'course-authoring.ai-studio.audit.fact.updated',
+    defaultMessage: 'Last activity',
+  },
+  auditFactCourse: {
+    id: 'course-authoring.ai-studio.audit.fact.course',
+    defaultMessage: 'Built course',
+  },
+  auditFactTaskId: {
+    id: 'course-authoring.ai-studio.audit.fact.taskId',
+    defaultMessage: 'Build task',
+  },
+  auditFilesHeading: {
+    id: 'course-authoring.ai-studio.audit.files.heading',
+    defaultMessage: 'Uploaded files',
+  },
+  auditBriefHeading: {
+    id: 'course-authoring.ai-studio.audit.brief.heading',
+    defaultMessage: 'Collected brief',
+  },
+  auditOutlineHeading: {
+    id: 'course-authoring.ai-studio.audit.outline.heading',
+    defaultMessage: 'Outline',
+  },
+  auditOutlineCounts: {
+    id: 'course-authoring.ai-studio.audit.outline.counts',
+    defaultMessage: '{sections} sections · {subsections} subsections · {units} units',
+  },
+  auditComponentsHeading: {
+    id: 'course-authoring.ai-studio.audit.components.heading',
+    defaultMessage: 'Generated components',
+  },
+  auditNoComponents: {
+    id: 'course-authoring.ai-studio.audit.components.empty',
+    defaultMessage: 'This run stopped before any components were generated.',
+  },
+  auditEditedBadge: {
+    id: 'course-authoring.ai-studio.audit.components.edited',
+    defaultMessage: 'Edited after generation',
+  },
+  auditVideoHeading: {
+    id: 'course-authoring.ai-studio.audit.video.heading',
+    defaultMessage: 'Video jobs',
+  },
+  auditVideoProvider: {
+    id: 'course-authoring.ai-studio.audit.video.provider',
+    defaultMessage: 'Provider',
+  },
+  auditVideoJobId: {
+    id: 'course-authoring.ai-studio.audit.video.jobId',
+    defaultMessage: 'Job id',
+  },
+  auditVideoStatus: {
+    id: 'course-authoring.ai-studio.audit.video.status',
+    defaultMessage: 'Status',
+  },
+  auditVideoError: {
+    id: 'course-authoring.ai-studio.audit.video.error',
+    defaultMessage: 'Error',
+  },
+  auditTranscriptHeading: {
+    id: 'course-authoring.ai-studio.audit.transcript.heading',
+    defaultMessage: 'Conversation',
+  },
+  auditNoMessages: {
+    id: 'course-authoring.ai-studio.audit.transcript.empty',
+    defaultMessage: 'This run has no recorded messages.',
+  },
+  auditToolCalls: {
+    id: 'course-authoring.ai-studio.audit.transcript.toolCalls',
+    defaultMessage: '{count} tool calls',
   },
 });
 

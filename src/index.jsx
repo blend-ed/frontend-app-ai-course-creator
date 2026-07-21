@@ -22,6 +22,8 @@ import {
 import AiStudioPage from './ai-studio';
 import AiStudioHistoryPage from './ai-studio/history/AiStudioHistoryPage';
 import PromptsAdminPage from './ai-studio/prompts/PromptsAdminPage';
+import AuditPage from './ai-studio/audit/AuditPage';
+import AuditRunPage from './ai-studio/audit/AuditRunPage';
 import messages from './i18n';
 import './index.scss';
 
@@ -42,6 +44,9 @@ const App = () => {
         <Route path="/ai-studio" element={<AiStudioPage />} />
         <Route path="/ai-studio/history" element={<AiStudioHistoryPage />} />
         <Route path="/ai-studio/prompts" element={<PromptsAdminPage />} />
+        {/* Audit routes precede the :courseCreationId catch-all. */}
+        <Route path="/ai-studio/audit" element={<AuditPage />} />
+        <Route path="/ai-studio/audit/:courseCreationId" element={<AuditRunPage />} />
         <Route path="/ai-studio/:courseCreationId" element={<AiStudioPage />} />
       </Route>,
     ),
@@ -85,6 +90,13 @@ initialize({
         // `/ai_course_creator`. All API calls resolve against this origin.
         STUDIO_BASE_URL: process.env.STUDIO_BASE_URL || null,
         SITE_NAME: process.env.SITE_NAME || null,
+        // Comma-separated prompt keys the prompt-settings editor may override
+        // (or `*` for all). Unset ⇒ plain-text prompts only, see
+        // DEFAULT_EDITABLE_PROMPT_KEYS. Runtime MFE_CONFIG wins over the build
+        // env, so don't clobber it with a null when the build env is unset.
+        AI_STUDIO_EDITABLE_PROMPT_KEYS: process.env.AI_STUDIO_EDITABLE_PROMPT_KEYS
+          || getConfig().AI_STUDIO_EDITABLE_PROMPT_KEYS
+          || null,
       }, 'AiCourseCreatorConfig');
     },
   },

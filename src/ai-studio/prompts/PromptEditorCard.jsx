@@ -14,9 +14,14 @@ import messages from '../messages';
  * body, or the built-in default when none is saved. Save creates or updates;
  * Reset deletes the row (reverting to the default) and is only offered when a
  * row exists.
+ *
+ * `readOnly` renders the built-in default for reference without any way to
+ * change it — used for prompts whose response the pipeline parses as JSON/OLX,
+ * where a free-text override would break course generation.
  */
 const PromptEditorCard = ({
-  title, help = undefined, row = null, defaultBody = '', placeholder = undefined, onSave, onReset,
+  title, help = undefined, row = null, defaultBody = '', placeholder = undefined,
+  onSave = undefined, onReset = undefined, readOnly = false, structured = false,
 }) => {
   const intl = useIntl();
   // Baseline so an unedited default is not "dirty" and cannot be re-saved as a
@@ -67,6 +72,52 @@ const PromptEditorCard = ({
       ? <Badge variant="info">{intl.formatMessage(messages.promptsCustomizedBadge)}</Badge>
       : <Badge variant="light">{intl.formatMessage(messages.promptsInactiveBadge)}</Badge>;
   })();
+
+  if (readOnly) {
+    // A row can still exist here from before the key was locked (or from a
+    // direct API call). Show it rather than the default so what's actually in
+    // effect is visible, and keep Reset so it can be cleared.
+    return (
+      <Card className="ai-studio-prompts__card ai-studio-prompts__card--locked">
+        <Card.Header
+          size="sm"
+          title={title}
+          subtitle={help}
+          actions={<Badge variant="light">{intl.formatMessage(messages.promptsLockedBadge)}</Badge>}
+        />
+        <Card.Section>
+          <Form.Control
+            as="textarea"
+            rows={6}
+            value={baseline}
+            readOnly
+            className="ai-studio-prompts__textarea"
+          />
+          <Form.Text className="mt-2">
+            {intl.formatMessage(
+              structured ? messages.promptsLockedHintStructured : messages.promptsLockedHint,
+            )}
+          </Form.Text>
+        </Card.Section>
+        {row && (
+          <Card.Footer>
+            <Stack direction="horizontal" gap={2} className="align-items-center w-100">
+              <span className="me-auto">{badge}</span>
+              {feedback === 'error' && (
+                <span className="ai-studio-prompts__feedback ai-studio-prompts__feedback--error">
+                  {intl.formatMessage(messages.promptsError)}
+                </span>
+              )}
+              {busy && <Spinner animation="border" size="sm" screenReaderText="" />}
+              <Button variant="tertiary" size="sm" onClick={handleReset} disabled={busy}>
+                {intl.formatMessage(messages.promptsReset)}
+              </Button>
+            </Stack>
+          </Card.Footer>
+        )}
+      </Card>
+    );
+  }
 
   return (
     <Card className="ai-studio-prompts__card">
