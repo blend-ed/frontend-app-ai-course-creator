@@ -542,7 +542,7 @@ const messages = defineMessages({
   },
   promptsScopeGlobal: {
     id: 'course-authoring.ai-studio.prompts.scope.global',
-    defaultMessage: 'Global',
+    defaultMessage: 'All organisations (global)',
   },
   promptsCreate: {
     id: 'course-authoring.ai-studio.prompts.create',
@@ -584,14 +584,6 @@ const messages = defineMessages({
   promptsScopeLabel: {
     id: 'course-authoring.ai-studio.prompts.scope.label',
     defaultMessage: 'Organisation',
-  },
-  promptsScopeContext: {
-    id: 'course-authoring.ai-studio.prompts.scope.context',
-    defaultMessage: 'Editing prompts for {org}',
-  },
-  promptsNoOrg: {
-    id: 'course-authoring.ai-studio.prompts.scope.none',
-    defaultMessage: 'No organisation is available, so prompt settings cannot be edited here.',
   },
   promptsLoadError: {
     id: 'course-authoring.ai-studio.prompts.loadError',

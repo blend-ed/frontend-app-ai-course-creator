@@ -41,6 +41,10 @@ export const buildProgressUrl = (id: string) => `${aiStudioBaseUrl()}/build/prog
 // allowed to create courses in (replaces the Blend-ed `orgName` cookie).
 export const studioHomeUrl = () => `${getConfig().STUDIO_BASE_URL}/api/contentstore/v1/home`;
 
+// Studio's org list (short names) — the same source its new-course form
+// autocompletes from. Used as a fallback, see `fetchAllowedOrgs`.
+export const organizationsUrl = () => `${getConfig().STUDIO_BASE_URL}/organizations`;
+
 export interface SendChatParams {
   message: string;
   courseCreationId?: string;
@@ -82,13 +86,31 @@ export interface AllowedOrgs {
 }
 
 export async function fetchAllowedOrgs(): Promise<AllowedOrgs> {
-  const { data } = await getAuthenticatedHttpClient().get(studioHomeUrl());
+  const client = getAuthenticatedHttpClient();
+  const { data } = await client.get(studioHomeUrl());
   const home = camelCaseObject(data) as {
     allowedOrganizations?: string[];
+    allowedOrganizationsForLibraries?: string[];
     allowToCreateNewOrg?: boolean;
   };
+
+  // Studio only populates `allowed_organizations` when
+  // FEATURES['ENABLE_CREATOR_GROUP'] is enabled — otherwise it hard-returns [].
+  // Fall back to the library-scoped list, then to the full org list, so the org
+  // selector is never empty on instances that don't use creator groups.
+  let orgs = home.allowedOrganizations || [];
+  if (!orgs.length) { orgs = home.allowedOrganizationsForLibraries || []; }
+  if (!orgs.length) {
+    try {
+      const { data: all } = await client.get(organizationsUrl());
+      orgs = Array.isArray(all) ? all.filter((o): o is string => typeof o === 'string') : [];
+    } catch {
+      orgs = [];
+    }
+  }
+
   return {
-    allowedOrganizations: home.allowedOrganizations || [],
+    allowedOrganizations: orgs,
     allowToCreateNewOrg: !!home.allowToCreateNewOrg,
   };
 }

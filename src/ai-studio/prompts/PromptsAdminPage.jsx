@@ -94,39 +94,30 @@ const PromptsAdminPage = () => {
         <header className="ai-studio-prompts__header">
           <h1 className="ai-studio-prompts__title">{intl.formatMessage(messages.promptsHeading)}</h1>
           <p className="ai-studio-prompts__subtitle">{intl.formatMessage(messages.promptsSubtitle)}</p>
-          {org && (
-            allowedOrgs.length > 1 ? (
-              <Form.Group className="ai-studio-prompts__org-select mt-3 mb-0">
-                <Form.Label className="x-small text-gray-600 mb-1">
-                  {intl.formatMessage(messages.promptsScopeLabel)}
-                </Form.Label>
-                <Form.Control
-                  as="select"
-                  size="sm"
-                  value={org}
-                  onChange={(e) => setOrg(e.target.value)}
-                >
-                  {allowedOrgs.map((o) => <option key={o} value={o}>{o}</option>)}
-                </Form.Control>
-              </Form.Group>
-            ) : (
-              <span className="ai-studio-prompts__scope">
-                <RiBuildingLine size={14} className="ai-studio-prompts__scope-icon" />
-                {intl.formatMessage(messages.promptsScopeContext, { org })}
-              </span>
-            )
-          )}
+          <Form.Group className="ai-studio-prompts__org-select mt-3 mb-0">
+            <Form.Label className="x-small text-gray-600 mb-1">
+              <RiBuildingLine size={14} className="ai-studio-prompts__scope-icon" />
+              {intl.formatMessage(messages.promptsScopeLabel)}
+            </Form.Label>
+            <Form.Control
+              as="select"
+              size="sm"
+              value={org}
+              onChange={(e) => setOrg(e.target.value)}
+            >
+              {/* Blank scope is the backend's global scope — always editable, so
+                  the page still works on instances with no org list. */}
+              <option value="">{intl.formatMessage(messages.promptsScopeGlobal)}</option>
+              {allowedOrgs.map((o) => <option key={o} value={o}>{o}</option>)}
+            </Form.Control>
+          </Form.Group>
         </header>
 
         {forbidden && (
           <Alert variant="warning">{intl.formatMessage(messages.promptsForbidden)}</Alert>
         )}
 
-        {!forbidden && !org && allowedOrgs.length === 0 && (
-          <Alert variant="warning">{intl.formatMessage(messages.promptsNoOrg)}</Alert>
-        )}
-
-        {org && (
+        {!forbidden && (
           <>
             {loadError && !forbidden && (
               <Alert variant="danger">{intl.formatMessage(messages.promptsLoadError)}</Alert>

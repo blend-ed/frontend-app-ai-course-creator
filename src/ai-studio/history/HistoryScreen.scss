@@ -121,16 +121,16 @@
     &:hover .ai-studio-history__row-delete,
     &:focus-within .ai-studio-history__row-delete {
       opacity: 1;
-      pointer-events: auto;
     }
   }
 
+  // Always rendered (hover-only hid it on touch devices and made it
+  // undiscoverable); hover/focus just raises it to full opacity.
   &__row-delete {
     position: absolute;
     top: var(--pgn-spacing-spacer-2);
     right: var(--pgn-spacing-spacer-2);
-    opacity: 0;
-    pointer-events: none;
+    opacity: .55;
     transition: opacity .15s ease;
     z-index: 1;
   }
