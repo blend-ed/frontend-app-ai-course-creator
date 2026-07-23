@@ -2,24 +2,6 @@
 // intentionally avoids any tenant/brand design system and leans on Paragon
 // defaults. Only minimal layout + the monospace prompt editor are styled here.
 .ai-studio-prompts {
-  &__container {
-    max-width: 920px;
-  }
-
-  &__back.btn {
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  &__header {
-    margin-bottom: 1.5rem;
-  }
-
-  &__subtitle {
-    max-width: 60ch;
-    color: var(--pgn-color-gray-600);
-  }
-
   &__scope {
     display: inline-flex;
     align-items: center;
@@ -37,8 +19,13 @@
     max-width: 18rem;
   }
 
+  // Matches the compact section titles on the audit pages so the staff
+  // sub-pages read as one product (Paragon's default h2 is far larger).
   &__section-title {
     margin-bottom: .25rem;
+    font-size: var(--pgn-typography-font-size-scale-16);
+    font-weight: var(--pgn-typography-font-weight-scale-semi-bold);
+    color: var(--pgn-color-text-strong);
   }
 
   &__section-hint {

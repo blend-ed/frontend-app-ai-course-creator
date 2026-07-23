@@ -1,0 +1,43 @@
+// Shared compact header for the AI Studio sub-pages (audit, prompts, history).
+// Standardises the title/subtitle/back-button treatment so the pages read as
+// one product regardless of their per-page content layout.
+//
+// NB: block is `ai-studio-pageheader`, deliberately distinct from the
+// `.ai-studio-page` full-viewport app shell in AiStudioPage.scss.
+.ai-studio-pageheader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pgn-spacing-spacer-3);
+  margin-bottom: var(--pgn-spacing-spacer-4);
+
+  &__back.btn {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  // Keeps the title/subtitle stack together and lets it flex against actions.
+  &__text {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--pgn-typography-font-size-scale-24);
+    font-weight: var(--pgn-typography-font-weight-scale-semi-bold);
+    color: var(--pgn-color-text-strong);
+  }
+
+  &__subtitle {
+    margin-top: var(--pgn-spacing-spacer-1);
+    margin-bottom: 0;
+    font-size: var(--pgn-typography-font-size-scale-14);
+    color: var(--pgn-color-text-subtle);
+  }
+
+  &__actions {
+    flex: 0 0 auto;
+  }
+}

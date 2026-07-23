@@ -11,6 +11,7 @@ import { RiArrowLeftLine, RiErrorWarningLine } from '@remixicon/react';
 import { format as formatDate, parseISO } from 'date-fns';
 
 import messages from '../messages';
+import PageHeader from '../common/PageHeader';
 import { useAuditRun } from '../data/apiHooks';
 import { STAGES } from '../data/constants';
 import { formatDuration, stageColor, stageLabel } from './stages';
@@ -25,6 +26,68 @@ const formatBytes = (bytes) => {
   if (bytes < 1024) { return `${bytes} B`; }
   if (bytes < 1024 * 1024) { return `${Math.round(bytes / 1024)} KB`; }
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+/**
+ * The outline arrives as a flat node list (section/subsection/unit) linked by
+ * `parentId`; nest it back into a tree, ordered by `order`, so the outline can
+ * render as one collapsible per section. Nodes with an unresolved parent fall
+ * back to the top level, so nothing is ever dropped.
+ */
+const buildOutlineTree = (nodes) => {
+  const byId = new Map(nodes.map((n) => [n.id, { ...n, children: [] }]));
+  const roots = [];
+  byId.forEach((node) => {
+    const parent = node.parentId ? byId.get(node.parentId) : null;
+    if (parent) { parent.children.push(node); } else { roots.push(node); }
+  });
+  const sortByOrder = (arr) => {
+    arr.sort((a, b) => a.order - b.order);
+    arr.forEach((n) => sortByOrder(n.children));
+  };
+  sortByOrder(roots);
+  return roots;
+};
+
+/** One collapsible card per top-level outline node (a section). */
+const OutlineTree = ({ nodes }) => {
+  const intl = useIntl();
+  const sections = buildOutlineTree(nodes);
+  return (
+    <div className="ai-studio-audit__components">
+      {sections.map((section) => {
+        const unitCount = section.children.reduce((sum, sub) => sum + sub.children.length, 0);
+        return (
+          <Collapsible
+            key={section.id}
+            styling="card-lg"
+            title={(
+              <Stack direction="horizontal" gap={2} className="align-items-center flex-wrap">
+                <span className="ai-studio-audit__outline-section">{section.name}</span>
+                <Badge variant="light" size="sm">
+                  {intl.formatMessage(messages.auditOutlineSectionCounts, {
+                    subsections: section.children.length,
+                    units: unitCount,
+                  })}
+                </Badge>
+              </Stack>
+            )}
+          >
+            <ul className="ai-studio-audit__outline">
+              {section.children.map((sub) => (
+                <React.Fragment key={sub.id}>
+                  <li className="ai-studio-audit__outline-subsection">{sub.name}</li>
+                  {sub.children.map((unit) => (
+                    <li key={unit.id} className="ai-studio-audit__outline-unit">{unit.name}</li>
+                  ))}
+                </React.Fragment>
+              ))}
+            </ul>
+          </Collapsible>
+        );
+      })}
+    </div>
+  );
 };
 
 /** Renders any metadata value — strings, numbers, arrays and nested objects. */
@@ -93,7 +156,7 @@ const AuditRunContent = ({ courseCreationId }) => {
 
   if (isLoading) {
     return (
-      <Container size="xl" className="py-4">
+      <Container size="lg" className="py-4">
         <Skeleton height={32} className="mb-3" />
         <Skeleton height={200} count={2} />
       </Container>
@@ -104,7 +167,7 @@ const AuditRunContent = ({ courseCreationId }) => {
     const forbidden = error?.response?.status === 403;
     const missing = error?.response?.status === 404;
     return (
-      <Container size="xl" className="py-4">
+      <Container size="lg" className="py-4">
         <Button
           variant="tertiary"
           size="sm"
@@ -128,32 +191,20 @@ const AuditRunContent = ({ courseCreationId }) => {
   const metadataKeys = Object.keys(run.metadata || {});
 
   return (
-    <Container size="xl" className="py-4">
-      <Button
-        variant="tertiary"
-        size="sm"
-        className="mb-3"
-        iconBefore={RiArrowLeftLine}
-        onClick={() => navigate('/ai-studio/audit')}
-      >
-        {intl.formatMessage(messages.auditBackToList)}
-      </Button>
-
-      <header className="ai-studio-audit__header">
-        <Stack direction="horizontal" gap={2} className="align-items-center flex-wrap">
-          <h1 className="ai-studio-audit__title mb-0">
-            {run.title || intl.formatMessage(messages.historyUntitled)}
-          </h1>
+    <Container size="lg" className="py-4">
+      <PageHeader
+        backTo="/ai-studio/audit"
+        backLabel={intl.formatMessage(messages.auditBackToList)}
+        title={run.title || intl.formatMessage(messages.historyUntitled)}
+        subtitle={intl.formatMessage(messages.auditRunByline, {
+          username: run.username,
+          org: run.organisationId || '—',
+          created: safeFormat(run.createdAt, 'MMM dd, yyyy HH:mm'),
+        })}
+        actions={(
           <Badge variant="soft" color={stageColor(run.stage)}>{stageLabel(intl, run.stage)}</Badge>
-        </Stack>
-        <p className="ai-studio-audit__subtitle">
-          {intl.formatMessage(messages.auditRunByline, {
-            username: run.username,
-            org: run.organisationId || '—',
-            created: safeFormat(run.createdAt, 'MMM dd, yyyy HH:mm'),
-          })}
-        </p>
-      </header>
+        )}
+      />
 
       {run.stage === STAGES.FAILED && (
         <Alert variant="danger" icon={RiErrorWarningLine}>
@@ -225,15 +276,7 @@ const AuditRunContent = ({ courseCreationId }) => {
             units: run.outline.counts.unit,
           })}
         </p>
-        {run.outline.nodes.length > 0 && (
-          <ul className="ai-studio-audit__outline">
-            {run.outline.nodes.map((node) => (
-              <li key={node.id} className={`ai-studio-audit__outline-${node.hierarchy}`}>
-                {node.name}
-              </li>
-            ))}
-          </ul>
-        )}
+        {run.outline.nodes.length > 0 && <OutlineTree nodes={run.outline.nodes} />}
       </Section>
 
       <Section title={intl.formatMessage(messages.auditComponentsHeading)} count={run.components.length}>
@@ -325,7 +368,7 @@ const AuditRunPage = () => {
         {authenticatedUser?.administrator ? (
           <AuditRunContent courseCreationId={courseCreationId} />
         ) : (
-          <Container size="xl" className="py-4">
+          <Container size="lg" className="py-4">
             <Alert variant="warning">{intl.formatMessage(messages.auditStaffOnly)}</Alert>
           </Container>
         )}

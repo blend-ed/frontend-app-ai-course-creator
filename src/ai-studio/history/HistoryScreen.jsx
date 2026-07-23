@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
-  ActionRow, Badge, Button, IconButton, ModalDialog, SearchField, Spinner,
+  ActionRow, Badge, Button, Container, IconButton, ModalDialog, SearchField, Spinner,
 } from '@openedx/paragon';
 import {
   RiAddLine, RiCheckboxCircleFill, RiDeleteBinLine, RiLoader4Line,
@@ -11,6 +11,7 @@ import {
 import { format as formatDate, parseISO, isToday } from 'date-fns';
 
 import messages from '../messages';
+import PageHeader from '../common/PageHeader';
 import { useCourseCreations, useDeleteCourseCreation } from '../data/apiHooks';
 import { STAGES } from '../data/constants';
 import HoverCard from './HoverCard';
@@ -235,20 +236,22 @@ const HistoryScreen = () => {
 
   return (
     <div className="ai-studio-history">
-      <div className="ai-studio-history__container">
-        <div className="ai-studio-history__header">
-          <h1 className="ai-studio-history__title">
-            {intl.formatMessage(messages.historyTitle)}
-          </h1>
-          <Button
-            variant="primary"
-            iconBefore={RiAddLine}
-            onClick={() => navigate('/ai-studio')}
-            className="ai-studio-history__new-cta"
-          >
-            {intl.formatMessage(messages.historyNewCourse)}
-          </Button>
-        </div>
+      <Container size="lg" className="py-4">
+        <PageHeader
+          backTo="/ai-studio"
+          backLabel={intl.formatMessage(messages.historyBack)}
+          title={intl.formatMessage(messages.historyTitle)}
+          actions={(
+            <Button
+              variant="primary"
+              iconBefore={RiAddLine}
+              onClick={() => navigate('/ai-studio')}
+              className="ai-studio-history__new-cta"
+            >
+              {intl.formatMessage(messages.historyNewCourse)}
+            </Button>
+          )}
+        />
         <SearchField.Advanced
           onSubmit={setQuery}
           onChange={setQuery}
@@ -283,7 +286,7 @@ const HistoryScreen = () => {
             )}
           </div>
         )}
-      </div>
+      </Container>
 
       <ModalDialog
         title={intl.formatMessage(messages.historyDeleteConfirmTitle)}

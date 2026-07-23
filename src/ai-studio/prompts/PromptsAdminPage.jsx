@@ -8,6 +8,7 @@ import {
 import { RiArrowLeftLine, RiBuildingLine } from '@remixicon/react';
 
 import messages from '../messages';
+import PageHeader from '../common/PageHeader';
 import { PROMPT_KEY_FIELDS, editablePromptKeys } from '../data/constants';
 import {
   useAllowedOrgs,
@@ -31,7 +32,7 @@ const BackToStudio = () => {
     <Button
       variant="tertiary"
       size="sm"
-      className="ai-studio-prompts__back mb-3"
+      className="ai-studio-pageheader__back mb-3"
       iconBefore={RiArrowLeftLine}
       onClick={() => navigate('/ai-studio')}
     >
@@ -55,7 +56,6 @@ const PromptsAccessDenied = () => {
 
 const PromptsAdminPageContent = () => {
   const intl = useIntl();
-  const navigate = useNavigate();
 
   const { data: orgInfo } = useAllowedOrgs();
   const allowedOrgs = useMemo(() => orgInfo?.allowedOrganizations || [], [orgInfo]);
@@ -114,29 +114,30 @@ const PromptsAdminPageContent = () => {
   return (
     <div className="ai-studio-prompts">
       <Container size="lg" className="ai-studio-prompts__container py-4">
-        <BackToStudio />
+        <PageHeader
+          backTo="/ai-studio"
+          backLabel={intl.formatMessage(messages.promptsBack)}
+          title={intl.formatMessage(messages.promptsHeading)}
+          subtitle={intl.formatMessage(messages.promptsSubtitle)}
+        />
 
-        <header className="ai-studio-prompts__header">
-          <h1 className="ai-studio-prompts__title">{intl.formatMessage(messages.promptsHeading)}</h1>
-          <p className="ai-studio-prompts__subtitle">{intl.formatMessage(messages.promptsSubtitle)}</p>
-          <Form.Group className="ai-studio-prompts__org-select mt-3 mb-0">
-            <Form.Label className="x-small text-gray-600 mb-1">
-              <RiBuildingLine size={14} className="ai-studio-prompts__scope-icon" />
-              {intl.formatMessage(messages.promptsScopeLabel)}
-            </Form.Label>
-            <Form.Control
-              as="select"
-              size="sm"
-              value={org}
-              onChange={(e) => setOrg(e.target.value)}
-            >
-              {/* Blank scope is the backend's global scope — always editable, so
-                  the page still works on instances with no org list. */}
-              <option value="">{intl.formatMessage(messages.promptsScopeGlobal)}</option>
-              {allowedOrgs.map((o) => <option key={o} value={o}>{o}</option>)}
-            </Form.Control>
-          </Form.Group>
-        </header>
+        <Form.Group className="ai-studio-prompts__org-select mb-4">
+          <Form.Label className="x-small text-gray-600 mb-1">
+            <RiBuildingLine size={14} className="ai-studio-prompts__scope-icon" />
+            {intl.formatMessage(messages.promptsScopeLabel)}
+          </Form.Label>
+          <Form.Control
+            as="select"
+            size="sm"
+            value={org}
+            onChange={(e) => setOrg(e.target.value)}
+          >
+            {/* Blank scope is the backend's global scope — always editable, so
+                the page still works on instances with no org list. */}
+            <option value="">{intl.formatMessage(messages.promptsScopeGlobal)}</option>
+            {allowedOrgs.map((o) => <option key={o} value={o}>{o}</option>)}
+          </Form.Control>
+        </Form.Group>
 
         {forbidden && (
           <Alert variant="warning">{intl.formatMessage(messages.promptsForbidden)}</Alert>

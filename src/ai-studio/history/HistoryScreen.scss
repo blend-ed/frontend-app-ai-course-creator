@@ -15,44 +15,14 @@
 }
 
 .ai-studio-history {
+  // Rendered inside the fixed-viewport `.ai-studio-page` shell, so this is the
+  // scroll region. The inner Container (size="lg", shared with audit/prompts)
+  // caps and centres the content width.
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
   background: var(--pgn-color-white);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   overflow: hidden auto;
-  padding: var(--pgn-spacing-spacer-5);
-
-  &__container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--pgn-spacing-spacer-5);
-    width: 800px;
-    max-width: 100%;
-  }
-
-  &__header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    width: 100%;
-    min-height: 40px;
-  }
-
-  h1.ai-studio-history__title {
-    font-weight: var(--pgn-typography-font-weight-scale-medium);
-    font-size: 20px;
-    line-height: 28px;
-    color: var(--pgn-color-black);
-    margin: 0;
-    flex: 1;
-    min-width: 0;
-    font-feature-settings: 'cv09' on, 'ss11' on, 'calt' off, 'liga' off;
-  }
 
   &__new-cta.btn,
   &__new-cta {
@@ -66,8 +36,11 @@
     border-radius: 9px;
   }
 
+  // Space the header/search/list with plain block margins (mirrors the
+  // audit/prompts pages) rather than the old flex-gap column.
   &__search.pgn__searchfield {
     width: 100%;
+    margin-bottom: var(--pgn-spacing-spacer-4);
     border: 1px solid var(--pgn-color-gray-400);
     border-radius: 9px;
     background: var(--pgn-color-white);

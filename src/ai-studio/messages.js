@@ -147,6 +147,10 @@ const messages = defineMessages({
     id: 'course-authoring.ai-studio.history.title',
     defaultMessage: 'Your creation history',
   },
+  historyBack: {
+    id: 'course-authoring.ai-studio.history.back',
+    defaultMessage: 'Back to AI Studio',
+  },
   historyDeleteThread: {
     id: 'course-authoring.ai-studio.history.deleteThread',
     defaultMessage: 'Delete',
@@ -855,6 +859,10 @@ const messages = defineMessages({
   auditOutlineCounts: {
     id: 'course-authoring.ai-studio.audit.outline.counts',
     defaultMessage: '{sections} sections · {subsections} subsections · {units} units',
+  },
+  auditOutlineSectionCounts: {
+    id: 'course-authoring.ai-studio.audit.outline.sectionCounts',
+    defaultMessage: '{subsections} subsections · {units} units',
   },
   auditComponentsHeading: {
     id: 'course-authoring.ai-studio.audit.components.heading',

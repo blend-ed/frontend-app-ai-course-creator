@@ -10,6 +10,7 @@ import { RiArrowLeftLine, RiErrorWarningLine } from '@remixicon/react';
 import { format as formatDate, parseISO } from 'date-fns';
 
 import messages from '../messages';
+import PageHeader from '../common/PageHeader';
 import { useAllowedOrgs, useAuditRuns, useAuditSummary } from '../data/apiHooks';
 import {
   STAGE_ORDER, formatDuration, stageColor, stageLabel,
@@ -28,7 +29,7 @@ const AuditAccessDenied = () => {
   const navigate = useNavigate();
   return (
     <div className="ai-studio-audit">
-      <Container size="xl" className="py-4">
+      <Container size="lg" className="py-4">
         <Button
           variant="tertiary"
           size="sm"
@@ -63,25 +64,26 @@ const SummaryTiles = ({ summary, isLoading }) => {
   ];
 
   return (
-    <div className="ai-studio-audit__stats">
-      {tiles.map((tile) => (
-        <div key={tile.key} className="ai-studio-audit__stat">
-          <span className="ai-studio-audit__stat-value">{tile.value}</span>
-          <span className="ai-studio-audit__stat-label">{intl.formatMessage(tile.label)}</span>
-        </div>
-      ))}
+    <>
+      <div className="ai-studio-audit__stats">
+        {tiles.map((tile) => (
+          <div key={tile.key} className="ai-studio-audit__stat">
+            <span className="ai-studio-audit__stat-value">{tile.value}</span>
+            <span className="ai-studio-audit__stat-label">{intl.formatMessage(tile.label)}</span>
+          </div>
+        ))}
+      </div>
       {summary.successRate !== null && (
         <p className="ai-studio-audit__stats-note">
           {intl.formatMessage(messages.auditSuccessRateNote)}
         </p>
       )}
-    </div>
+    </>
   );
 };
 
 const AuditPageContent = () => {
   const intl = useIntl();
-  const navigate = useNavigate();
 
   const { data: orgInfo } = useAllowedOrgs();
   const allowedOrgs = useMemo(() => orgInfo?.allowedOrganizations || [], [orgInfo]);
@@ -119,21 +121,13 @@ const AuditPageContent = () => {
 
   return (
     <div className="ai-studio-audit">
-      <Container size="xl" className="py-4">
-        <Button
-          variant="tertiary"
-          size="sm"
-          className="mb-3"
-          iconBefore={RiArrowLeftLine}
-          onClick={() => navigate('/ai-studio')}
-        >
-          {intl.formatMessage(messages.auditBack)}
-        </Button>
-
-        <header className="ai-studio-audit__header">
-          <h1 className="ai-studio-audit__title">{intl.formatMessage(messages.auditHeading)}</h1>
-          <p className="ai-studio-audit__subtitle">{intl.formatMessage(messages.auditSubtitle)}</p>
-        </header>
+      <Container size="lg" className="py-4">
+        <PageHeader
+          backTo="/ai-studio"
+          backLabel={intl.formatMessage(messages.auditBack)}
+          title={intl.formatMessage(messages.auditHeading)}
+          subtitle={intl.formatMessage(messages.auditSubtitle)}
+        />
 
         {forbidden ? (
           <Alert variant="warning">{intl.formatMessage(messages.auditStaffOnly)}</Alert>
