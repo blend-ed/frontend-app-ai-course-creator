@@ -74,25 +74,48 @@ What changed
 ============
 
 * ``@edx/frontend-platform`` ``^8.5.1`` → ``^8.7.0``.
-* ``@openedx/paragon`` ``^23.4.5`` → ``npm:@blend-ed/blendxui@^23.2.6``.
+* ``@openedx/paragon`` ``^23.4.5`` (stock Paragon, locked at 23.22.0) →
+  ``npm:@blend-ed/blendxui@~23.3.2`` (Design System 2.0, the version every
+  Verawood fork uses).
 * ``@openedx/frontend-build`` ``14.6.3`` → ``^14.6.6``;
   ``@edx/browserslist-config`` → ``^1.3.0``.
-* ``overrides`` pins ``@types/node`` to ``^25.2.0``: the regenerated lockfile
-  otherwise pulls ``@types/node`` 26, whose ``ffi.d.ts`` does not parse under
-  this repo's TypeScript 4.9, so ``npm run types`` fails.
-* ``package-lock.json`` regenerated.
+* ``package-lock.json`` updated from the base lock with a targeted
+  ``npm install`` of those four packages only; everything else stays pinned.
+* ``src/_paragon-compat.scss`` removed: blendxui defines the tokens it set.
 * Not added: ``@blend-ed/blendxplatform`` and the header/footer components.
   The app imports none of them (it has no Blend-ed shell, header or footer).
+
+GitHub Packages token
+=====================
+
+``@openedx/paragon`` is now an alias for ``@blend-ed/blendxui``, which is
+published on GitHub Packages (``npm.pkg.github.com``), not npmjs. So:
+
+* Local ``npm ci`` / ``npm install`` needs a GitHub token with
+  ``read:packages`` in ``~/.npmrc``::
+
+     @blend-ed:registry=https://npm.pkg.github.com
+     //npm.pkg.github.com/:_authToken=<token>
+
+* The Tutor image build needs it too. ai-course-creator is not yet in
+  tutor-blendxconfig's ``V5_MFE_FORKS`` (the list ``blendx_private_npm_mfes``
+  is built from). Whoever registers this MFE in Tutor must add it there, or
+  the build fails with a 401.
 
 How to repeat it
 ================
 
+Do not delete the lockfile. Install only the packages you are changing, so
+the rest of the tree stays pinned:
+
 .. code-block:: bash
 
    nvm use                        # Node 24
-   # edit the versions in package.json, then:
-   rm -rf node_modules package-lock.json
-   npm install
+   npm ci
+   npm install "@edx/frontend-platform@^8.7.0" \
+     "@openedx/paragon@npm:@blend-ed/blendxui@~23.3.2"
+   npm install -D "@edx/browserslist-config@^1.3.0" \
+     "@openedx/frontend-build@^14.6.6"
    npm run build && npm run lint && npm test
 
 Translations are not pulled in this repo (``src/i18n/index.ts`` is the
