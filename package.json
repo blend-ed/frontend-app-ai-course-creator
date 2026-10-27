@@ -40,7 +40,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.4",
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@fortawesome/react-fontawesome": "0.2.6",
-    "@openedx/paragon": "npm:@blend-ed/blendxui@~23.3.2",
+    "@openedx/paragon": "github:blend-ed/blendxui#v23.4.0-blendx.1",
     "@remixicon/react": "^4.9.0",
     "@tanstack/react-query": "^5.90.5",
     "classnames": "^2.5.1",
